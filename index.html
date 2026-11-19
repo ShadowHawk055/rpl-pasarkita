@@ -1,0 +1,2662 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#176b48">
+  <title>PasarKita — UMKM & Pasar Digital</title>
+  <style>
+    :root {
+      --green:#176b48; --on-green:#fff; --dark:#163b2b; --lime:#ddf5b2;
+      --bg:#f5f7f3; --line:#e3e9e0; --muted:#5e6b61; --surface:#fff; --soft:#edf3e9;
+      --soft-strong:#e3eedb; --warning-bg:#fff4db; --warning-text:#715518; --art:#eff4e8;
+      --focus:#5f8f2d;
+    }
+    :root[data-theme="dark"] {
+      --green:#8fe0b2; --on-green:#082016; --dark:#f2faf4; --lime:#173b2b;
+      --bg:#0d1410; --line:#3a5143; --muted:#c0cec3; --surface:#18231d; --soft:#263a2e;
+      --soft-strong:#31503d; --warning-bg:#493a1e; --warning-text:#ffe4a3; --art:#294033;
+      --focus:#b9e889;
+    }
+    * { box-sizing:border-box }
+    body { margin:0; font:15px/1.5 system-ui,sans-serif; background:var(--bg); color:var(--dark) }
+    button,input,select,textarea { font:inherit }
+    button { cursor:pointer; min-height:44px }
+    button:disabled { opacity:.45; cursor:not-allowed }
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible {
+      outline:3px solid var(--focus); outline-offset:3px
+    }
+    button { border:0; border-radius:12px; padding:10px 16px; background:var(--green); color:var(--on-green); font-weight:650 }
+    .secondary { background:var(--soft); color:var(--green) }
+    #theme-toggle { min-height:34px; padding:6px 10px; border-radius:9px; font-size:13px }
+    .danger { color:#ffb1b1; background:#402526 }
+    .plain { background:transparent; color:var(--muted) }
+    h1,h2,h3,p { margin:0 }
+    h1 { font-size:30px; letter-spacing:-1px }
+    h2 { font-size:21px; letter-spacing:-.5px }
+    h3 { font-size:16px }
+    small,.muted { color:var(--muted) }
+    header { background:var(--surface); border-bottom:1px solid var(--line) }
+    .topbar { max-width:1260px; margin:auto; padding:18px 28px; display:flex; align-items:center; justify-content:space-between; gap:12px }
+    .topbar-right { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end }
+    .brand { display:flex; gap:10px; align-items:center; font-weight:800; font-size:22px; letter-spacing:-.7px }
+    .logo { background:var(--green); color:var(--lime); width:42px; height:42px; border-radius:14px; display:grid; place-items:center }
+    .pill { display:inline-flex; padding:5px 10px; border-radius:20px; background:var(--soft); font-size:12px; color:var(--green) }
+    .pill.off { background:var(--warning-bg); color:var(--warning-text) }
+    .layout { max-width:1260px; margin:auto; display:grid; grid-template-columns:200px minmax(0,1fr); min-height:calc(100vh - 80px) }
+    aside { padding:28px 16px; border-right:1px solid var(--line) }
+    .nav { display:grid; gap:8px }
+    .nav button { text-align:left; background:transparent; color:var(--muted); padding:13px 16px }
+    .nav button.active { color:var(--green); background:var(--soft-strong) }
+    .aside-note { font-size:12px; margin:36px 16px; color:var(--muted) }
+    main { padding:30px; min-width:0 }
+    .page-head { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:22px }
+    .eyebrow { font-size:11px; font-weight:750; letter-spacing:2px; color:var(--green); margin-bottom:7px }
+    .hero { background:var(--green); color:var(--on-green); border-radius:22px; padding:25px; display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; overflow:hidden }
+    .hero p { color:color-mix(in srgb, var(--on-green) 72%, transparent); max-width:480px; margin-top:8px }
+    .hero-art { font-size:65px; background:#ffffff12; border:1px solid #ffffff22; border-radius:24px; padding:12px 22px; transform:rotate(-8deg) }
+    .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px }
+    .stat,.panel { background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:20px }
+    .stat strong { display:block; margin-top:7px; font-size:23px; letter-spacing:-.7px }
+    .stat small { font-size:12px }
+    .split { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:20px; align-items:start }
+    .toolbar { display:flex; align-items:center; gap:10px; margin-bottom:18px }
+    input,select,textarea { width:100%; min-height:44px; border:1px solid var(--line); border-radius:11px; padding:11px 13px; background:var(--surface); color:var(--dark) }
+    input[type=search] { background:var(--surface) }
+    .products { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:13px }
+    .product { background:var(--surface); border:1px solid var(--line); padding:13px; border-radius:17px }
+    .product-art { height:96px; display:grid; place-items:center; font-size:49px; border-radius:12px; background:var(--art); margin-bottom:12px }
+    .product:nth-child(3n+2) .product-art { background:color-mix(in srgb, var(--warning-bg) 80%, var(--surface)) }
+    .product:nth-child(3n) .product-art { background:color-mix(in srgb, var(--muted) 15%, var(--surface)) }
+    .product .price { font-weight:750; margin:8px 0 }
+    .product button { width:100%; margin-top:11px; padding:8px }
+    .product-actions { display:grid; gap:8px }
+    .product-actions button { margin-top:0 }
+    .low { color:var(--warning-text) }
+    .cart { position:sticky; top:18px }
+    .between { display:flex; align-items:center; justify-content:space-between; gap:10px }
+    .divider { border-top:1px solid var(--line); margin:17px 0 }
+    .cart-row { padding:13px 0; border-bottom:1px solid var(--line) }
+    .qty { display:flex; align-items:center; gap:12px; margin-top:8px }
+    .qty button { min-height:32px; width:32px; padding:0; border-radius:8px }
+    .full { width:100% }
+    .empty { color:var(--muted); text-align:center; padding:30px 10px; font-size:14px }
+    .table-wrap { overflow:auto }
+    table { width:100%; border-collapse:collapse; font-size:14px; text-align:left }
+    th { font-weight:600; color:var(--muted); background:var(--soft) }
+    th,td { padding:13px 12px; border-bottom:1px solid var(--line); white-space:nowrap }
+    .actions { display:flex; gap:8px; flex-wrap:wrap }
+    .actions button { min-height:34px; padding:6px 10px; border-radius:9px; font-size:13px }
+    .trend-list { display:grid; gap:8px; margin-top:12px }
+    .trend-row { display:grid; grid-template-columns:120px 1fr 1fr 1fr; gap:10px; align-items:center; font-size:13px }
+    .trend-row > strong { font-size:12px; color:var(--muted) }
+    .filters { display:grid; grid-template-columns:1fr 180px; gap:10px; margin:14px 0 8px }
+    .market-grid { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:18px }
+    #map { height:420px; background:#e6edde; border-radius:16px; z-index:0; display:block }
+    .merchant { background:var(--surface); border:1px solid var(--line); border-radius:15px; padding:16px; margin-bottom:12px }
+    .merchant button { margin-top:12px; width:100% }
+    .detail-grid { display:grid; gap:16px }
+    .detail-list { display:grid; gap:10px; margin-top:12px }
+    .detail-list .cart-row { padding:10px 0 }
+    .section-gap { margin-top:22px }
+    .notice { padding:12px 15px; border-radius:12px; background:var(--warning-bg); color:var(--warning-text); font-size:13px; margin-bottom:16px }
+    .auth-wrap { max-width:980px; margin:24px auto; padding:0 20px 20px }
+    .auth-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:16px }
+    .security-note { font-size:13px; color:var(--warning-text); background:var(--warning-bg); border:1px solid var(--line); border-radius:12px; padding:12px 14px; margin-top:14px }
+    .identity { font-size:13px; color:var(--muted) }
+    .badge-role { display:inline-flex; align-items:center; border-radius:20px; padding:5px 10px; background:var(--soft); color:var(--green); font-size:12px; font-weight:700; text-transform:capitalize }
+    .access-card { max-width:600px; margin:40px auto; text-align:center }
+    .status { margin-top:8px; color:var(--muted); font-size:12px }
+    dialog { border:0; border-radius:20px; padding:25px; width:min(460px,calc(100% - 28px)); max-height:90vh; color:var(--dark); background:var(--surface); box-shadow:0 20px 80px #14352530 }
+    dialog::backdrop { background:#132c2455 }
+    label { display:block; margin:15px 0; font-size:13px; font-weight:600 }
+    label input,label select { margin-top:6px }
+    .form-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:22px }
+    #toast { position:fixed; bottom:25px; left:50%; transform:translateX(-50%); background:#163b2b; color:white; padding:13px 20px; border-radius:12px; z-index:2000; max-width:90%; box-shadow:0 8px 25px #0002 }
+    [hidden] { display:none!important }
+    footer { color:var(--muted); font-size:12px; margin-top:26px }
+    /* ===== Peta & direksi ===== */
+    .map-wrap { position:relative }
+    .map-chip { position:absolute; top:12px; left:50%; transform:translateX(-50%); z-index:5; max-width:calc(100% - 130px); display:flex; align-items:center; gap:8px; padding:7px 12px; border-radius:20px; background:var(--surface); color:var(--dark); border:1px solid var(--line); box-shadow:0 4px 16px #0003; font-size:13px; font-weight:650 }
+    .map-chip button { min-height:28px; padding:3px 10px; font-size:12px; border-radius:14px }
+    #map.picking { cursor:crosshair }
+    .tiles-osm { transition:filter .2s }
+    :root[data-theme="dark"] .tiles-osm { filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9) }
+    .pk-pin, .pk-me, .pk-step { background:none; border:0 }
+    .pk-pin .pin { position:relative; width:36px; height:36px; border-radius:50%; background:#176b48; color:#fff; border:3px solid #fff; box-shadow:0 3px 10px #0006; display:grid; place-items:center; font-size:17px; font-weight:800 }
+    .pk-pin .pin::after { content:''; position:absolute; left:50%; bottom:-9px; transform:translateX(-50%); border:6px solid transparent; border-top-color:#176b48; border-bottom:0 }
+    .pk-pin.dest .pin { background:#d93025; width:42px; height:42px; font-size:20px }
+    .pk-pin.dest .pin::after { border-top-color:#d93025 }
+    .pk-pin.start .pin { background:#1a73e8 }
+    .pk-pin.start .pin::after { border-top-color:#1a73e8 }
+    .pk-me .dot { width:18px; height:18px; border-radius:50%; background:#1a73e8; border:3px solid #fff; box-shadow:0 0 0 2px #1a73e855, 0 2px 6px #0006 }
+    .pk-step .ring { width:22px; height:22px; border-radius:50%; background:#fff; border:5px solid #1a73e8; box-shadow:0 2px 8px #0006 }
+    @media (prefers-reduced-motion:no-preference) { .pk-me .dot { animation:pk-pulse 2s infinite } }
+    @keyframes pk-pulse { 0% { box-shadow:0 0 0 0 #1a73e899, 0 2px 6px #0006 } 70% { box-shadow:0 0 0 14px #1a73e800, 0 2px 6px #0006 } 100% { box-shadow:0 0 0 0 #1a73e800, 0 2px 6px #0006 } }
+    .pk-ctl a { cursor:pointer; font-size:17px }
+    .pk-popup { min-width:170px; color:#163b2b }
+    .pk-popup strong { display:block; font-size:14px }
+    .pk-popup p { margin:4px 0 0; font-size:12px; color:#5e6b61 }
+    .pk-popup .pk-row { display:flex; gap:6px; margin-top:10px }
+    .pk-popup button { min-height:34px; padding:6px 10px; font-size:12px; border-radius:9px; flex:1; background:#176b48; color:#fff }
+    .pk-popup button.alt { background:#edf3e9; color:#176b48 }
+    .shop-dist { margin-top:8px; font-size:12px; color:var(--green); font-weight:650 }
+    .mini { min-height:32px; padding:4px 10px; font-size:12px; border-radius:9px }
+    .route-panel { background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:18px; margin-top:14px }
+    .route-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px }
+    .route-head .plain { min-height:36px; padding:4px 10px }
+    .route-sub { font-size:12px; margin-top:4px }
+    .route-block { margin-top:14px }
+    .route-block > .cap { font-size:12px; font-weight:700; color:var(--muted); margin-bottom:6px; display:block }
+    .route-origin-label { font-size:13px; padding:9px 12px; border-radius:11px; background:var(--soft); color:var(--dark) }
+    .route-origin-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+    .route-origin-actions button, .route-search button { min-height:38px; padding:6px 12px; font-size:13px; border-radius:10px }
+    .route-search { display:flex; gap:8px; margin-top:8px }
+    .route-search input { min-height:38px; padding:7px 11px }
+    .route-search button { flex:none }
+    #route-search-results { display:grid; gap:4px; margin-top:6px; font-size:13px; color:var(--muted) }
+    .route-result { text-align:left; background:var(--soft); color:var(--dark); font-weight:500; font-size:12px; min-height:36px; padding:7px 10px; border-radius:9px }
+    .route-modes { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:6px; margin-top:14px }
+    .route-modes button { display:grid; gap:1px; justify-items:center; min-height:48px; padding:6px 2px; font-size:12px; background:var(--soft); color:var(--green) }
+    .route-modes button[aria-pressed="true"] { background:var(--green); color:var(--on-green) }
+    .route-summary { margin-top:14px; padding:14px; border-radius:14px; background:var(--soft) }
+    .route-big { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap }
+    .route-big strong { font-size:26px; letter-spacing:-.8px }
+    .route-big span { font-size:15px; color:var(--muted); font-weight:650 }
+    .route-summary p { font-size:12px; margin-top:4px }
+    .route-error { color:var(--warning-text); background:var(--warning-bg); padding:12px 14px; border-radius:12px; font-size:13px }
+    .route-steps { list-style:none; margin:14px 0 0; padding:0; max-height:340px; overflow:auto; border-top:1px solid var(--line) }
+    .route-steps li { border-bottom:1px solid var(--line) }
+    .route-step { display:grid; grid-template-columns:34px minmax(0,1fr) auto; gap:10px; align-items:center; width:100%; text-align:left; background:transparent; color:var(--dark); font-weight:500; font-size:14px; border-radius:0; padding:10px 4px; min-height:48px }
+    .route-step:hover { background:var(--soft) }
+    .route-step .ic { width:30px; height:30px; display:grid; place-items:center; border-radius:50%; background:var(--soft-strong); color:var(--green); font-size:16px; font-weight:800 }
+    .route-step small { white-space:nowrap }
+    .route-foot { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-top:14px; font-size:13px }
+    .route-foot a { color:var(--green); font-weight:650 }
+    @media(max-width:1100px) {
+      .products { grid-template-columns:repeat(2,minmax(0,1fr)) }
+      .layout { grid-template-columns:170px minmax(0,1fr) }
+      main { padding:22px }
+      .split { grid-template-columns:minmax(0,1fr) 280px }
+    }
+    @media(max-width:850px) {
+      .auth-grid { grid-template-columns:1fr }
+      .layout { display:block }
+      aside { padding:10px 20px; border-right:0; border-bottom:1px solid var(--line) }
+      .nav { display:flex; overflow:auto }
+      .nav button { white-space:nowrap; flex:1; text-align:center }
+      .aside-note { display:none }
+      .market-grid { grid-template-columns:1fr }
+    }
+    @media(max-width:600px) {
+      .topbar { padding:14px 16px }
+      .topbar-right { gap:6px }
+      .brand { font-size:20px }
+      main { padding:20px 15px }
+      aside { padding:8px }
+      .nav button { font-size:12px; padding:10px 8px }
+      h1 { font-size:25px }
+      .hero { padding:20px }
+      .hero-art { display:none }
+      .stats { gap:8px }
+      .stat { padding:12px }
+      .stat strong { font-size:17px }
+      .stat small { font-size:11px }
+      .split { grid-template-columns:1fr }
+      .cart { position:static }
+      .filters { grid-template-columns:1fr }
+      .trend-row { grid-template-columns:100px 1fr; gap:4px 10px }
+      .trend-row span { grid-column:2 }
+      .page-head { align-items:flex-start }
+      .page-head button { font-size:12px }
+      #map { height:310px }
+      #toast { bottom:15px; width:max-content }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand"><span class="logo" aria-hidden="true">▦</span>PasarKita<span class="pill">UMKM</span></div>
+    <div class="topbar-right">
+      <span id="identity" class="identity" hidden></span>
+      <span id="role-badge" class="badge-role" hidden></span>
+      <button id="theme-toggle" class="secondary" type="button" aria-label="Ubah tema">☾ Mode gelap</button>
+      <button id="logout" class="secondary" hidden>Logout</button>
+      <span id="connection" class="pill" role="status"></span>
+    </div>
+  </div>
+</header>
+
+<section id="auth-screen" class="auth-wrap" hidden>
+  <div class="panel">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">AKSES PASARKITA</p>
+        <h1>Login & Sign Up</h1>
+        <p class="muted">Masuk untuk mengakses fitur sesuai peran Admin, Penjual, atau Pembeli.</p>
+      </div>
+    </div>
+    <div class="auth-grid">
+      <form id="login-form" class="panel" aria-label="Form login">
+        <h2>Login</h2>
+        <label>Email atau Username
+          <input name="login" autocomplete="username" required placeholder="contoh: admin@pasarkita.local">
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="current-password" required minlength="8">
+        </label>
+        <button type="submit" class="full">Masuk</button>
+        <p class="status" id="login-status" aria-live="polite">Gunakan akun sendiri atau akun demo.</p>
+      </form>
+      <form id="signup-form" class="panel" aria-label="Form signup">
+        <h2>Sign Up</h2>
+        <label>Nama lengkap
+          <input name="name" autocomplete="name" required maxlength="70" placeholder="Nama Anda">
+        </label>
+        <label>Email atau Username
+          <input name="login" autocomplete="username" required maxlength="80" placeholder="email@contoh.com atau username">
+        </label>
+        <label>Password
+          <input name="password" type="password" autocomplete="new-password" required minlength="8">
+        </label>
+        <label>Konfirmasi Password
+          <input name="confirmPassword" type="password" autocomplete="new-password" required minlength="8">
+        </label>
+        <label>Role
+          <select name="role" required>
+            <option value="penjual">Penjual</option>
+            <option value="pembeli">Pembeli</option>
+          </select>
+        </label>
+        <button type="submit" class="full">Daftar</button>
+        <p class="status" id="signup-status" aria-live="polite">Akun disimpan lokal di browser ini.</p>
+      </form>
+    </div>
+    <div class="security-note">
+      Catatan keamanan: autentikasi ini hanya untuk prototipe lokal (browser/localStorage), bukan untuk produksi.
+      <br>Akun demo: Admin <strong>admin@pasarkita.local / Admin123!</strong> · Penjual <strong>penjual@pasarkita.local / Penjual123!</strong> · Pembeli <strong>pembeli@pasarkita.local / Pembeli123!</strong>
+    </div>
+  </div>
+</section>
+
+<div class="layout" id="app-shell" hidden>
+  <aside>
+    <nav class="nav" aria-label="Menu utama">
+      <button data-page="kasir" class="active">▦ Katalog</button>
+      <button data-page="stok">▤ Toko & Stok</button>
+      <button data-page="rekapan" hidden>▥ Rekapan penjualan</button>
+      <button data-page="riwayat" hidden>🧾 Riwayat Pembelian</button>
+      <button data-page="pasar">⌖ Toko</button>
+      <button data-page="keuangan">↗ Keuangan</button>
+    </nav>
+    <div class="aside-note">
+      <strong>Usaha lokal, peluang besar.</strong>
+      <p style="margin-top:8px">Kelola dagangan dari satu tempat, tanpa ribet.</p>
+      <p id="offline-status" style="margin-top:18px">Menyiapkan halaman offline…</p>
+    </div>
+  </aside>
+
+<main>
+    <section id="page-kasir">
+      <div class="page-head">
+        <div><p class="eyebrow">PASAR DIGITAL</p><h1>Belanja dari toko lokal</h1><p class="muted">Pilih toko, pilih produk, lalu checkout dengan petunjuk arah.</p></div>
+        <span class="pill">PasarKita</span>
+      </div>
+      <div class="hero">
+        <div><h2>Dari pasar lokal,<br>untuk kebutuhan sehari-hari.</h2><p>Kasir ringan untuk usaha yang terus bergerak. Mulai dari transaksi pertama Anda.</p></div>
+        <div class="hero-art" aria-hidden="true">🥬</div>
+      </div>
+      <div class="stats" id="sales-stats"></div>
+      <div class="split">
+        <div>
+          <div class="toolbar"><select id="shop-filter" aria-label="Pilih toko"></select><input id="search" type="search" placeholder="Cari produk…" aria-label="Cari produk"></div>
+          <div class="products" id="products"></div>
+        </div>
+        <section class="panel cart" id="cart-panel" aria-label="Keranjang belanja">
+          <div class="between"><h2>Keranjang</h2><button class="plain" id="clear-cart">Kosongkan</button></div>
+          <div id="cart-items"></div>
+          <div class="divider"></div>
+          <div class="between"><span>Total belanja</span><strong id="cart-total"></strong></div>
+          <label id="cash-label">Uang diterima (Rp)<input id="cash" type="number" min="0" step="1" inputmode="numeric" placeholder="Contoh: 50000"></label>
+          <button class="full" id="checkout">Selesaikan transaksi →</button>
+          <p id="checkout-status" class="muted" aria-live="polite" style="font-size:12px;margin-top:10px">Belum ada transaksi pada sesi ini.</p>
+          <p class="muted" style="font-size:12px;margin-top:12px">Pembayaran tunai. Tidak memproses pembayaran digital.</p>
+        </section>
+      </div>
+      <div class="panel section-gap">
+        <h2>Riwayat penjualan terbaru</h2>
+        <p class="muted">Menampilkan 8 transaksi kasir terakhir di perangkat ini.</p>
+        <div class="table-wrap" style="margin-top:12px">
+          <table>
+            <thead><tr><th>Waktu</th><th>Rincian</th><th>Total</th><th>Kembalian</th></tr></thead>
+            <tbody id="sales-history"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+<section id="page-rekapan" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">REKAPAN PENJUAL</p><h1>Penjualan toko Anda</h1><p class="muted">Pantau omzet, jumlah transaksi, dan produk terlaris dari toko milik Anda.</p></div>
+      </div>
+      <div class="stats" id="seller-sales-stats"></div>
+      <div class="panel">
+        <div class="between">
+          <div><h2>Riwayat penjualan</h2><p class="muted">Transaksi terbaru dari semua toko yang Anda kelola.</p></div>
+          <select id="seller-sales-period" aria-label="Filter periode rekapan" style="max-width:180px">
+            <option value="all">Semua periode</option>
+            <option value="30">30 hari terakhir</option>
+            <option value="90">90 hari terakhir</option>
+            <option value="365">1 tahun terakhir</option>
+          </select>
+        </div>
+        <div class="table-wrap" style="margin-top:16px">
+          <table>
+            <thead><tr><th>Waktu</th><th>Toko</th><th>Rincian</th><th>Total</th><th>Pembayaran</th></tr></thead>
+            <tbody id="seller-sales-history"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel section-gap">
+        <h2>Produk terlaris</h2>
+        <p class="muted">Diurutkan berdasarkan jumlah barang terjual.</p>
+        <div id="seller-top-products" class="trend-list"></div>
+      </div>
+    </section>
+
+<section id="page-stok" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">TOKO PENJUAL</p><h1>Toko & stok</h1><p class="muted">Kelola toko dan produk yang menjadi tanggung jawab Anda.</p></div>
+        <div class="actions"><button id="add-shop">+ Toko</button><button id="add-product" class="secondary">+ Produk</button></div>
+      </div>
+      <div class="notice">Penjual hanya dapat mengubah toko dan stok miliknya sendiri. Admin dapat mengelola semua toko.</div>
+      <div class="panel table-wrap">
+        <table>
+          <thead><tr><th>Produk</th><th>Harga jual</th><th>Stok</th><th>Tindakan</th></tr></thead>
+          <tbody id="stock-table"></tbody>
+        </table>
+      </div>
+    </section>
+
+<section id="page-pasar" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">TOKO TERDAFTAR</p><h1>Lokasi toko</h1><p class="muted">Admin dapat memantau semua toko; pembeli dapat memilih toko sebelum berbelanja.</p></div>
+      </div>
+      <div class="notice">Lokasi dan rute menggunakan OpenStreetMap. Tekan “Direksi” pada toko untuk melihat rute langsung di peta. Pastikan koordinat toko benar saat membuat toko.</div>
+      <div class="toolbar">
+        <input id="market-shop-search" type="search" placeholder="Cari toko…" aria-label="Cari toko">
+        <input id="market-product-search" type="search" placeholder="Cari barang di toko…" aria-label="Cari barang di toko">
+      </div>
+      <div class="market-grid">
+        <div>
+          <div class="map-wrap">
+            <div id="map" aria-label="Peta lokasi toko"></div>
+            <div id="map-chip" class="map-chip" role="status" hidden><span id="map-chip-text"></span><button id="map-chip-cancel" type="button" class="secondary" hidden>Batal</button></div>
+          </div>
+          <p id="map-status" class="muted" style="font-size:12px;margin-top:9px">Memuat peta saat menu dibuka.</p>
+          <div id="route-panel" class="route-panel" hidden>
+            <div class="route-head">
+              <div><p class="eyebrow" style="margin-bottom:4px">DIREKSI</p><h2 id="route-title">Rute ke toko</h2><p id="route-sub" class="muted route-sub"></p></div>
+              <button id="route-close" type="button" class="plain" aria-label="Tutup rute">✕</button>
+            </div>
+            <div class="route-block">
+              <span class="cap">Titik awal</span>
+              <div id="route-origin-label" class="route-origin-label">Belum dipilih</div>
+              <div class="route-origin-actions">
+                <button id="route-use-gps" type="button" class="secondary">📍 Lokasi saya</button>
+                <button id="route-pick" type="button" class="secondary">🖱️ Pilih di peta</button>
+              </div>
+              <div class="route-search">
+                <input id="route-search" type="search" placeholder="Atau cari alamat/tempat awal…" aria-label="Cari alamat titik awal" maxlength="120">
+                <button id="route-search-btn" type="button" class="secondary">Cari</button>
+              </div>
+              <div id="route-search-results" aria-live="polite"></div>
+            </div>
+            <div class="route-modes" role="group" aria-label="Moda perjalanan">
+              <button type="button" data-route-mode="car" aria-pressed="true"><span aria-hidden="true">🚗</span>Mobil</button>
+              <button type="button" data-route-mode="motor" aria-pressed="false"><span aria-hidden="true">🏍️</span>Motor</button>
+              <button type="button" data-route-mode="bike" aria-pressed="false"><span aria-hidden="true">🚲</span>Sepeda</button>
+              <button type="button" data-route-mode="foot" aria-pressed="false"><span aria-hidden="true">🚶</span>Jalan kaki</button>
+            </div>
+            <div id="route-summary" class="route-summary" aria-live="polite" hidden></div>
+            <ol id="route-steps" class="route-steps" aria-label="Petunjuk arah"></ol>
+            <div class="route-foot"><a id="route-gmaps" target="_blank" rel="noopener" href="#">Buka di Google Maps ↗</a><span class="muted">Rute oleh OSRM · data © OpenStreetMap</span></div>
+          </div>
+        </div>
+        <div id="merchants"></div>
+      </div>
+      <div class="panel section-gap">
+        <h2>Pesanan perangkat ini</h2>
+        <p class="muted">Pesanan tersimpan lokal dan mengurangi stok toko setelah checkout.</p>
+        <div id="orders"></div>
+      </div>
+    </section>
+
+<section id="page-keuangan" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">CATATAN USAHA</p><h1>Keuangan sederhana</h1><p class="muted">Ringkasan seluruh transaksi di perangkat ini.</p></div>
+        <button id="add-expense">+ Pengeluaran</button>
+      </div>
+      <div class="stats" id="finance-stats"></div>
+      <div class="notice">Arus kas bersih = penjualan tunai − pengeluaran tercatat. Ini bukan laba karena belum menghitung harga pokok, piutang, atau utang.</div>
+      <div class="panel">
+        <div class="between">
+          <h2>Riwayat transaksi</h2>
+          <div class="actions">
+            <button class="secondary" id="backup">Unduh backup</button>
+            <button class="secondary" id="restore-trigger">Pulihkan backup</button>
+            <button class="danger" id="reset-data">Reset data</button>
+          </div>
+        </div>
+        <div class="filters">
+          <input id="history-search" type="search" placeholder="Cari keterangan transaksi…">
+          <select id="history-period" aria-label="Filter periode transaksi">
+            <option value="all">Semua periode</option>
+            <option value="30">30 hari terakhir</option>
+            <option value="90">90 hari terakhir</option>
+            <option value="365">1 tahun terakhir</option>
+          </select>
+        </div>
+        <div class="table-wrap" style="margin-top:16px">
+          <table><thead><tr><th>Waktu</th><th>Keterangan</th><th>Masuk</th><th>Keluar</th></tr></thead><tbody id="history"></tbody></table>
+        </div>
+      </div>
+      <div class="panel section-gap">
+        <h2>Tren 6 bulan</h2>
+        <p class="muted">Ringkasan pemasukan, pengeluaran, dan arus kas bersih per bulan.</p>
+        <div id="trend-list" class="trend-list"></div>
+      </div>
+    </section>
+    <section id="page-riwayat" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">RIWAYAT KONSUMER</p><h1>Pembelian Saya</h1><p class="muted">Menampilkan pesanan akun yang sedang login.</p></div>
+      </div>
+      <div class="panel">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>ID Pesanan</th><th>Waktu</th><th>Rincian</th><th>Status</th><th>Total</th></tr></thead>
+            <tbody id="consumer-history"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="page-produk" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">DETAIL BARANG</p><h1 id="product-detail-title">Produk</h1><p class="muted">Deskripsi, ulasan, dan informasi produk.</p></div>
+        <button class="secondary" id="back-from-product">← Kembali</button>
+      </div>
+      <div id="product-detail-content" class="detail-grid"></div>
+    </section>
+    <section id="page-toko-detail" hidden>
+      <div class="page-head">
+        <div><p class="eyebrow">DETAIL TOKO</p><h1 id="shop-detail-title">Toko</h1><p class="muted">Profil toko, ulasan, dan produk tersedia.</p></div>
+        <button class="secondary" id="back-from-shop">← Kembali</button>
+      </div>
+      <div id="shop-detail-content" class="detail-grid"></div>
+    </section>
+    <section id="page-access" hidden>
+      <div class="panel access-card">
+        <h2>Akses ditolak</h2>
+        <p class="muted" id="access-message">Fitur ini tidak tersedia untuk peran Anda.</p>
+      </div>
+    </section>
+
+<footer>PasarKita · Prototipe lokal · Data dapat hilang jika data situs/browser dihapus. Unduh backup secara berkala.</footer>
+  </main>
+</div>
+
+<dialog id="editor">
+  <form id="editor-form">
+    <h2 id="editor-title"></h2>
+    <div id="editor-fields"></div>
+    <div class="form-actions">
+      <button type="button" class="secondary" id="cancel-editor">Batal</button>
+      <button type="submit">Simpan</button>
+    </div>
+  </form>
+</dialog>
+<div id="toast" role="status" hidden></div>
+<input id="restore-file" type="file" accept="application/json,.json" hidden>
+
+<script>
+'use strict';
+
+const $ = selector => document.querySelector(selector);
+const money = value => new Intl.NumberFormat('id-ID', {
+  style: 'currency', currency: 'IDR', maximumFractionDigits: 0
+}).format(value);
+const esc = value => String(value).replace(/[&<>"']/g, char => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+})[char]);
+const KEY = 'pasarkita-v1';
+const uid = () => crypto.randomUUID
+  ? crypto.randomUUID()
+  : Date.now().toString(36) + Math.random().toString(36).slice(2);
+const units = ['kg', 'liter', 'pcs', 'ikat', 'bungkus'];
+const roles = ['admin', 'penjual', 'pembeli'];
+
+const DEMO_ACCOUNTS = [
+  { name: 'Admin Demo', login: 'admin@pasarkita.local', role: 'admin', password: 'Admin123!' },
+  { name: 'Penjual Demo', login: 'penjual@pasarkita.local', role: 'penjual', password: 'Penjual123!' },
+  { name: 'Pembeli Demo', login: 'pembeli@pasarkita.local', role: 'pembeli', password: 'Pembeli123!' }
+];
+
+const initialData = () => ({
+  products: [
+    { id: 'p1', shopId: 'shop-demo', name: 'Beras premium', description: 'Beras pulen kualitas premium untuk kebutuhan harian.', price: 15000, stock: 24, unit: 'kg', icon: '🌾' },
+    { id: 'p2', shopId: 'shop-demo', name: 'Telur ayam', description: 'Telur ayam segar untuk konsumsi keluarga.', price: 28000, stock: 12, unit: 'kg', icon: '🥚' },
+    { id: 'p3', shopId: 'shop-demo', name: 'Tomat segar', description: 'Tomat segar pilihan dari petani lokal.', price: 12000, stock: 8, unit: 'kg', icon: '🍅' }
+  ],
+  shops: [{
+    id: 'shop-demo', ownerId: null, name: 'PasarKita Demo', description: 'Toko contoh kebutuhan sehari-hari.',
+    lat: -7.798, lng: 110.369, address: 'Yogyakarta', createdAt: new Date().toISOString()
+  }],
+  sales: [], expenses: [], orders: [], purchaseOrders: [], users: [], currentSession: null
+});
+
+let db, cart = {}, editAction;
+let map, mapPromise = null;
+const markers = {};
+let currentUser = null;
+let activePage = 'kasir';
+let cartOwnerId = null;
+let selectedProductId = null;
+let selectedShopId = null;
+let detailBackPage = 'kasir';
+
+function toast(message) {
+  $('#toast').textContent = message;
+  $('#toast').hidden = false;
+  clearTimeout(toast.timer);
+  toast.timer = setTimeout(() => $('#toast').hidden = true, 4200);
+}
+
+function fallbackHash(input) {
+  let hash = 5381;
+  for (const char of input) {
+    hash = ((hash << 5) + hash) + char.charCodeAt(0);
+    hash |= 0;
+  }
+  return `fallback:${Math.abs(hash).toString(16)}`;
+}
+
+async function hashPassword(password) {
+  const plain = String(password || '');
+  if (crypto?.subtle && typeof TextEncoder !== 'undefined') {
+    const bytes = new TextEncoder().encode(plain);
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    const hash = Array.from(new Uint8Array(digest)).map(x => x.toString(16).padStart(2, '0')).join('');
+    return `sha256:${hash}`;
+  }
+  return fallbackHash(plain);
+}
+
+async function verifyPassword(password, storedHash) {
+  const stored = String(storedHash || '');
+  if (!stored) return false;
+  if (stored.startsWith('sha256:') || stored.startsWith('fallback:')) {
+    return (await hashPassword(password)) === stored;
+  }
+  return password === stored;
+}
+
+function normalizeRole(value) {
+  const raw = String(value || '').toLowerCase();
+  if (raw === 'admin') return 'admin';
+  if (raw === 'penjual' || raw === 'seller') return 'penjual';
+  if (raw === 'pembeli' || raw === 'konsumer' || raw === 'consumer' || raw === 'buyer') return 'pembeli';
+  return null;
+}
+
+function normalizeLogin(value) {
+  const login = String(value || '').trim();
+  const emailOK = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(login);
+  const userOK = /^[a-zA-Z0-9._-]{3,30}$/.test(login);
+  if (!emailOK && !userOK) {
+    throw new Error('Gunakan email valid atau username 3-30 karakter (huruf, angka, titik, underscore, strip).');
+  }
+  return login.toLowerCase();
+}
+
+async function normalizeUser(user) {
+  if (!user || typeof user !== 'object') return null;
+  const role = normalizeRole(user.role);
+  if (!role) return null;
+  const loginNorm = normalizeLogin(user.login || user.username || user.email || '');
+  const name = text(user.name || user.fullName || loginNorm);
+  let passwordHash = String(user.passwordHash || '').trim();
+  if (!passwordHash && user.password) passwordHash = await hashPassword(String(user.password));
+  if (!passwordHash) return null;
+  return {
+    id: String(user.id || uid()).trim() || uid(),
+    name,
+    login: String(user.login || user.username || user.email || loginNorm).trim() || loginNorm,
+    loginNorm,
+    passwordHash,
+    role,
+    createdAt: safeDate(user.createdAt)
+  };
+}
+
+async function ensureDemoUsers(users) {
+  const existing = [...users];
+  const logins = new Set(existing.map(user => user.loginNorm));
+  for (const demo of DEMO_ACCOUNTS) {
+    const loginNorm = normalizeLogin(demo.login);
+    if (logins.has(loginNorm)) continue;
+    existing.push({
+      id: uid(),
+      name: demo.name,
+      login: demo.login,
+      loginNorm,
+      passwordHash: await hashPassword(demo.password),
+      role: demo.role,
+      createdAt: new Date().toISOString()
+    });
+    logins.add(loginNorm);
+  }
+  return existing;
+}
+
+function syncCurrentUser() {
+  const userId = db?.currentSession?.userId;
+  currentUser = userId ? db.users.find(user => user.id === userId) || null : null;
+  if (!currentUser && db?.currentSession) {
+    db.currentSession = null;
+    localStorage.setItem(KEY, JSON.stringify(db));
+  }
+}
+
+function canAccessPage(role, page) {
+  if (role === 'admin') return ['kasir', 'stok', 'pasar', 'keuangan', 'produk', 'toko-detail'].includes(page);
+  if (role === 'penjual') return ['kasir', 'stok', 'rekapan', 'pasar', 'produk', 'toko-detail'].includes(page);
+  if (role === 'pembeli') return ['kasir', 'riwayat', 'pasar', 'produk', 'toko-detail'].includes(page);
+  return false;
+}
+
+function isAdmin() {
+  return currentUser?.role === 'admin';
+}
+
+function isPembeli() {
+  return currentUser?.role === 'pembeli';
+}
+
+function isPenjual() {
+  return currentUser?.role === 'penjual';
+}
+
+function requireAuth() {
+  if (currentUser) return true;
+  toast('Silakan login terlebih dahulu.');
+  showAuthScreen();
+  return false;
+}
+
+function requireRole(allowedRoles, message) {
+  if (!requireAuth()) return false;
+  const allowed = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+  if (allowed.includes(currentUser.role)) return true;
+  toast(message || 'Akses ditolak untuk peran Anda.');
+  showAccessDenied(message || 'Fitur ini tidak tersedia untuk peran Anda.');
+  return false;
+}
+
+function commit(change) {
+  try {
+    const next = JSON.parse(JSON.stringify(db));
+    change(next);
+    localStorage.setItem(KEY, JSON.stringify(next));
+    db = next;
+    syncCurrentUser();
+    return true;
+  } catch (error) {
+    toast('Gagal menyimpan: ' + error.message);
+    return false;
+  }
+}
+
+function normalizeProduct(product) {
+  const icon = String(product?.icon || '📦').trim() || '📦';
+  const unit = text(product?.unit || 'pcs');
+  const descriptionRaw = String(product?.description || '').trim();
+  if (!units.includes(unit)) throw new Error('Satuan produk tidak valid.');
+  return {
+    id: text(product?.id || uid()),
+    shopId: String(product?.shopId || '').trim() || null,
+    name: text(product?.name),
+    description: descriptionRaw || 'Deskripsi produk belum ditambahkan.',
+    price: integer(product?.price),
+    stock: integer(product?.stock, 0),
+    unit,
+    icon
+  };
+}
+
+function safeDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
+}
+
+function looseInteger(value, fallback = 0, min = 0, max = 1000000000) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return fallback;
+  const i = Math.trunc(n);
+  if (!Number.isSafeInteger(i)) return fallback;
+  if (i < min) return fallback;
+  if (i > max) return max;
+  return i;
+}
+
+function normalizeSales(data) {
+  return data.filter(x => x && typeof x === 'object').map(sale => {
+    const items = Array.isArray(sale.items) ? sale.items.map(item => {
+      if (!item || typeof item !== 'object') return null;
+      const name = String(item.name || '').trim();
+      const price = looseInteger(item.price, 0, 0);
+      const qty = looseInteger(item.qty, 0, 1);
+      if (!name || qty === 0) return null;
+      return {
+        id: String(item.id || uid()).trim() || uid(),
+        shopId: item.shopId ? String(item.shopId).trim() : null,
+        name,
+        price,
+        qty,
+        unit: units.includes(String(item.unit || 'pcs').trim()) ? String(item.unit).trim() : 'pcs'
+      };
+    }).filter(Boolean) : [];
+    const derivedTotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+    const total = looseInteger(sale.total, derivedTotal, 0);
+    const cash = Math.max(looseInteger(sale.cash, total, 0), total);
+    return {
+      id: String(sale.id || uid()).trim() || uid(),
+      date: safeDate(sale.date),
+      items,
+      total,
+      cash,
+      change: Math.max(looseInteger(sale.change, cash - total, 0), cash - total),
+      source: String(sale.source || 'admin').trim() || 'admin',
+      consumerId: sale.consumerId ? String(sale.consumerId) : null,
+      paymentMethod: sale.paymentMethod ? String(sale.paymentMethod) : 'Tunai'
+    };
+  });
+}
+
+function normalizeExpenses(data) {
+  return data.filter(x => x && typeof x === 'object').map(expense => ({
+    id: String(expense.id || uid()).trim() || uid(),
+    date: safeDate(expense.date),
+    note: String(expense.note || expense.label || 'Pengeluaran').trim() || 'Pengeluaran',
+    amount: looseInteger(expense.amount, 0, 0)
+  }));
+}
+
+function normalizeMarketOrders(data) {
+  return data.filter(x => x && typeof x === 'object').map(order => ({
+    id: String(order.id || uid()).trim() || uid(),
+    date: safeDate(order.date),
+    merchant: String(order.merchant || 'Pedagang contoh').trim() || 'Pedagang contoh',
+    good: String(order.good || 'Paket barang').trim() || 'Paket barang',
+    qty: looseInteger(order.qty, 1, 1),
+    total: looseInteger(order.total, 0, 0),
+    pickup: String(order.pickup || 'Titik titip').trim() || 'Titik titip',
+    consumerId: order.consumerId ? String(order.consumerId) : null
+  }));
+}
+
+function normalizePurchaseOrders(data) {
+  return data.filter(x => x && typeof x === 'object').map(order => {
+    const items = Array.isArray(order.items) ? order.items.map(item => {
+      if (!item || typeof item !== 'object') return null;
+      const name = String(item.name || '').trim();
+      if (!name) return null;
+      return {
+        id: String(item.id || uid()).trim() || uid(),
+        name,
+        price: looseInteger(item.price, 0, 0),
+        qty: looseInteger(item.qty, 1, 1),
+        unit: units.includes(String(item.unit || 'pcs').trim()) ? String(item.unit).trim() : 'pcs'
+      };
+    }).filter(Boolean) : [];
+    const total = looseInteger(order.total, items.reduce((sum, item) => sum + item.price * item.qty, 0), 0);
+    return {
+      id: String(order.id || uid()).trim() || uid(),
+      orderNo: String(order.orderNo || ('ORD-' + String(order.id || uid()).slice(-8).toUpperCase())).trim(),
+      date: safeDate(order.date),
+      consumerId: String(order.consumerId || '').trim() || null,
+      buyerName: String(order.buyerName || 'Pembeli').trim() || 'Pembeli',
+      shopId: String(order.shopId || '').trim() || null,
+      shopName: String(order.shopName || 'Toko').trim() || 'Toko',
+      shopAddress: String(order.shopAddress || '').trim(),
+      lat: Number.isFinite(Number(order.lat)) ? Number(order.lat) : null,
+      lng: Number.isFinite(Number(order.lng)) ? Number(order.lng) : null,
+      paymentMethod: String(order.paymentMethod || 'Transfer (simulasi)').trim() || 'Transfer (simulasi)',
+      status: String(order.status || 'Berhasil (simulasi)').trim() || 'Berhasil (simulasi)',
+      items,
+      total
+    };
+  });
+}
+
+async function normalizeDb(data) {
+  if (!data || typeof data !== 'object') throw new Error('File backup tidak valid.');
+  const base = initialData();
+  const products = Array.isArray(data.products) ? data.products.map(product => {
+    try {
+      return normalizeProduct(product);
+    } catch {
+      return null;
+    }
+  }).filter(Boolean) : [];
+  const shops = (Array.isArray(data.shops) ? data.shops : base.shops).filter(shop => shop && typeof shop === 'object').map(shop => ({
+    id: text(shop.id || uid()),
+    ownerId: shop.ownerId ? String(shop.ownerId) : null,
+    name: text(shop.name || 'Toko tanpa nama'),
+    description: text(shop.description || 'Toko lokal PasarKita'),
+    address: text(shop.address || 'Lokasi belum diisi'),
+    lat: Number.isFinite(Number(shop.lat)) ? Number(shop.lat) : -7.798,
+    lng: Number.isFinite(Number(shop.lng)) ? Number(shop.lng) : 110.369,
+    createdAt: safeDate(shop.createdAt)
+  }));
+
+  const usersRaw = Array.isArray(data.users)
+    ? data.users
+    : (Array.isArray(data.accounts) ? data.accounts : []);
+  const userResults = await Promise.all(usersRaw.map(normalizeUser));
+  const usersUnique = [];
+  const seen = new Set();
+  for (const user of userResults.filter(Boolean)) {
+    if (seen.has(user.loginNorm)) continue;
+    usersUnique.push(user);
+    seen.add(user.loginNorm);
+  }
+  const users = await ensureDemoUsers(usersUnique);
+  const demoSeller = users.find(user => user.role === 'penjual');
+  if (demoSeller) shops.forEach(shop => { if (!shop.ownerId) shop.ownerId = demoSeller.id; });
+
+  const sales = normalizeSales(Array.isArray(data.sales) ? data.sales : []);
+  const expenses = normalizeExpenses(Array.isArray(data.expenses) ? data.expenses : []);
+  const orders = normalizeMarketOrders(Array.isArray(data.orders) ? data.orders : []);
+  const purchaseOrders = normalizePurchaseOrders(Array.isArray(data.purchaseOrders) ? data.purchaseOrders : []);
+  const shopIds = new Set(shops.map(shop => shop.id));
+  const migratedProducts = products.map(product => ({
+    ...product,
+    shopId: shopIds.has(product.shopId) ? product.shopId : (shops[0]?.id || null)
+  }));
+
+  const sessionUserId = String(data.currentSession?.userId || '').trim();
+  const validSession = users.find(user => user.id === sessionUserId) ? {
+    userId: sessionUserId,
+    loginAt: safeDate(data.currentSession?.loginAt)
+  } : null;
+
+  return {
+    products: migratedProducts.length ? migratedProducts : base.products,
+    shops,
+    sales,
+    expenses,
+    orders,
+    purchaseOrders,
+    users,
+    currentSession: validSession
+  };
+}
+
+function cartLines() {
+  return Object.entries(cart).map(([id, qty]) => {
+    const product = db.products.find(p => p.id === id);
+    return product ? { ...product, qty } : null;
+  }).filter(Boolean);
+}
+
+function cartTotal() {
+  return cartLines().reduce((sum, p) => sum + p.price * p.qty, 0);
+}
+
+function stat(label, value, note) {
+  return `<div class="stat"><small>${esc(label)}</small><strong>${esc(value)}</strong><small>${esc(note)}</small></div>`;
+}
+
+function showAuthScreen() {
+  $('#auth-screen').hidden = false;
+  $('#app-shell').hidden = true;
+  $('#logout').hidden = true;
+  $('#identity').hidden = true;
+  $('#role-badge').hidden = true;
+}
+
+function ensureCartOwner() {
+  if (!currentUser) {
+    cart = {};
+    cartOwnerId = null;
+    return;
+  }
+  if (cartOwnerId !== currentUser.id) {
+    cart = {};
+    cartOwnerId = currentUser.id;
+    $('#cash').value = '';
+  }
+}
+
+function renderTopbar() {
+  if (!currentUser) {
+    showAuthScreen();
+    return;
+  }
+  $('#auth-screen').hidden = true;
+  $('#app-shell').hidden = false;
+  $('#logout').hidden = false;
+  $('#identity').hidden = false;
+  $('#role-badge').hidden = false;
+  $('#identity').textContent = `${currentUser.name} (${currentUser.login})`;
+  $('#role-badge').textContent = currentUser.role;
+}
+
+function showAccessDenied(message) {
+  $('#access-message').textContent = message || 'Fitur ini tidak tersedia untuk peran Anda.';
+  document.querySelectorAll('main > section').forEach(s => s.hidden = true);
+  $('#page-access').hidden = false;
+  document.querySelectorAll('[data-page]').forEach(button => {
+    button.classList.remove('active');
+    button.removeAttribute('aria-current');
+  });
+}
+
+function setPage(page, accessMessage) {
+  if (!requireAuth()) return;
+  if (!canAccessPage(currentUser.role, page)) {
+    showAccessDenied(accessMessage || 'Akses ditolak untuk halaman tersebut.');
+    return;
+  }
+  activePage = page;
+  document.querySelectorAll('main > section').forEach(section => section.hidden = true);
+  const target = $('#page-' + page);
+  if (target) target.hidden = false;
+  document.querySelectorAll('[data-page]').forEach(button => {
+    const active = button.dataset.page === page;
+    button.classList.toggle('active', active);
+    if (active) button.setAttribute('aria-current', 'page');
+    else button.removeAttribute('aria-current');
+  });
+  if (page === 'pasar') initMap();
+}
+
+function renderNavigation() {
+  const btnKasir = document.querySelector('[data-page="kasir"]');
+  const btnStok = document.querySelector('[data-page="stok"]');
+  const btnRekapan = document.querySelector('[data-page="rekapan"]');
+  const btnKeuangan = document.querySelector('[data-page="keuangan"]');
+  const btnRiwayat = document.querySelector('[data-page="riwayat"]');
+  if (!currentUser) return;
+
+  if (isAdmin()) {
+    btnKasir.textContent = '▦ Dashboard / Kasir';
+    btnStok.hidden = false;
+    btnRekapan.hidden = true;
+    btnKeuangan.hidden = false;
+    btnRiwayat.hidden = true;
+  } else if (isPenjual()) {
+    btnKasir.textContent = '🏪 Toko saya';
+    btnStok.hidden = false;
+    btnRekapan.hidden = false;
+    btnKeuangan.hidden = true;
+    btnRiwayat.hidden = true;
+  } else {
+    btnKasir.textContent = '🏠 Katalog toko';
+    btnStok.hidden = true;
+    btnRekapan.hidden = true;
+    btnKeuangan.hidden = true;
+    btnRiwayat.hidden = false;
+  }
+}
+
+function renderProducts() {
+  const query = $('#search').value.toLocaleLowerCase('id-ID').trim();
+  const shopId = $('#shop-filter').value;
+  const sellerShopIds = isPenjual()
+    ? new Set(db.shops.filter(shop => shop.ownerId === currentUser?.id).map(shop => shop.id))
+    : null;
+  const products = db.products.filter(p =>
+    (!shopId || p.shopId === shopId) &&
+    (!sellerShopIds || sellerShopIds.has(p.shopId)) &&
+    p.name.toLocaleLowerCase('id-ID').includes(query)
+  );
+  $('#products').innerHTML = products.map(p => `
+    <article class="product">
+      <div class="product-art" aria-hidden="true">${esc(p.icon)}</div>
+      <h3>${esc(p.name)}</h3>
+      <div class="price">${money(p.price)} <small>/ ${esc(p.unit)}</small></div>
+      <small class="${p.stock <= 5 ? 'low' : ''}">Stok ${p.stock} ${esc(p.unit)}</small>
+      <div class="product-actions">
+        <button class="secondary" data-view-product="${esc(p.id)}">Lihat detail</button>
+        ${isPenjual()
+          ? `<button data-edit="${esc(p.id)}">Edit produk</button>`
+          : `<button class="secondary" data-add="${esc(p.id)}" ${p.stock <= (cart[p.id] || 0) ? 'disabled' : ''}>
+          ${p.stock === 0 ? 'Stok habis' : '+ Keranjang'}
+        </button>`}
+      </div>
+    </article>`).join('') || '<p class="empty">Produk tidak ditemukan.</p>';
+}
+
+function renderCart() {
+  const cartPanel = $('#cart-panel');
+  if (isPenjual()) {
+    cartPanel.hidden = true;
+    return;
+  }
+  cartPanel.hidden = false;
+  const lines = cartLines();
+  const roleLabel = isAdmin() ? 'mulai jualan' : 'mulai belanja';
+  $('#cart-items').innerHTML = lines.map(p => `
+    <div class="cart-row">
+      <div class="between"><strong>${esc(p.name)}</strong><small>${money(p.price * p.qty)}</small></div>
+      <div class="qty">
+        <button class="secondary" data-minus="${esc(p.id)}" aria-label="Kurangi ${esc(p.name)}">−</button>
+        <span>${p.qty} ${esc(p.unit)}</span>
+        <button class="secondary" data-add="${esc(p.id)}" aria-label="Tambah ${esc(p.name)}" ${p.qty >= p.stock ? 'disabled' : ''}>+</button>
+      </div>
+    </div>`).join('') || `<div class="empty">🧺<br>Keranjang masih kosong.<br>Pilih produk untuk ${roleLabel}.</div>`;
+  $('#cart-total').textContent = money(cartTotal());
+  $('#checkout').disabled = lines.length === 0;
+
+  const cashLabel = $('#cash').closest('label');
+  cashLabel.hidden = !isAdmin();
+  $('#checkout').textContent = isAdmin() ? 'Selesaikan transaksi →' : 'Checkout pesanan →';
+}
+
+function renderStockTable() {
+  const ownedShopIds = isAdmin() ? new Set(db.shops.map(shop => shop.id)) :
+    new Set(db.shops.filter(shop => shop.ownerId === currentUser?.id).map(shop => shop.id));
+  const products = db.products.filter(p => ownedShopIds.has(p.shopId));
+  $('#stock-table').innerHTML = products.map(p => `
+    <tr>
+      <td>${esc(p.icon)} ${esc(p.name)}<small class="muted"><br>${esc(db.shops.find(s => s.id === p.shopId)?.name || 'Tanpa toko')}</small></td>
+      <td>${money(p.price)} / ${esc(p.unit)}</td>
+      <td class="${p.stock <= 5 ? 'low' : ''}">${p.stock} ${esc(p.unit)}</td>
+      <td>
+        <div class="actions">
+          <button class="secondary" data-restock="${esc(p.id)}">+ Stok</button>
+          <button class="secondary" data-edit="${esc(p.id)}">Edit</button>
+          ${isAdmin() ? `<button class="danger" data-delete="${esc(p.id)}">Hapus</button>` : ''}
+        </div>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="4" class="empty">Belum ada produk. Tambahkan produk baru untuk mulai berjualan.</td></tr>';
+}
+
+function renderShopFilter() {
+  const shops = (isPenjual()
+    ? db.shops.filter(shop => shop.ownerId === currentUser?.id)
+    : db.shops
+  ).sort((a, b) => a.name.localeCompare(b.name));
+  const selected = $('#shop-filter').value;
+  $('#shop-filter').innerHTML = '<option value="">' + (isPenjual() ? 'Pilih semua toko saya' : 'Pilih semua toko') + '</option>' +
+    shops.map(shop => `<option value="${esc(shop.id)}">${esc(shop.name)}</option>`).join('');
+  if (shops.some(shop => shop.id === selected)) $('#shop-filter').value = selected;
+  else $('#shop-filter').value = '';
+}
+
+function renderShops() {
+  const shopQuery = $('#market-shop-search').value.toLocaleLowerCase('id-ID').trim();
+  const productQuery = $('#market-product-search').value.toLocaleLowerCase('id-ID').trim();
+  const visibleBase = (isAdmin() || isPembeli()) ? db.shops : db.shops.filter(shop => shop.ownerId === currentUser?.id);
+  const visible = visibleBase.filter(shop => {
+    const matchShop = !shopQuery || [shop.name, shop.description, shop.address]
+      .join(' ')
+      .toLocaleLowerCase('id-ID')
+      .includes(shopQuery);
+    const matchProduct = !productQuery || db.products.some(product =>
+      product.shopId === shop.id && product.name.toLocaleLowerCase('id-ID').includes(productQuery)
+    );
+    return matchShop && matchProduct;
+  });
+  if (userPos) visible.sort((a, b) => distanceTo(a) - distanceTo(b));
+  $('#merchants').innerHTML = visible.map(shop => {
+    const matchedProducts = productQuery
+      ? db.products
+        .filter(product => product.shopId === shop.id && product.name.toLocaleLowerCase('id-ID').includes(productQuery))
+        .map(product => product.name)
+      : [];
+    const matchedInfo = matchedProducts.length
+      ? `<p class="muted" style="margin-top:8px">Produk cocok: ${esc(matchedProducts.join(', '))}</p>`
+      : '';
+    return `<article class="merchant">
+      <span class="pill">${esc(db.users.find(user => user.id === shop.ownerId)?.name || 'Penjual')}</span>
+      <h3 style="margin-top:9px">🏪 ${esc(shop.name)}</h3>
+      <p class="muted">${esc(shop.description)}</p><small>${esc(shop.address)}</small>
+      ${distanceBadge(shop)}
+      ${matchedInfo}
+      <button data-route-shop="${esc(shop.id)}">🧭 Direksi ke toko</button>
+      <div class="between"><button class="secondary" data-locate="${esc(shop.id)}">Lihat peta</button>
+      <button class="secondary" data-view-shop="${esc(shop.id)}">Detail toko</button>
+      ${isPembeli() ? `<button data-select-shop="${esc(shop.id)}">Pilih toko</button>` : ''}
+      ${isAdmin() || shop.ownerId === currentUser?.id ? `<button data-edit-shop="${esc(shop.id)}">Edit toko</button>` : ''}
+      ${isAdmin() ? `<button class="danger" data-delete-shop="${esc(shop.id)}">Hapus</button>` : ''}</div>
+    </article>`;
+  }).join('') || '<p class="empty">Toko tidak ditemukan untuk kata kunci tersebut.</p>';
+}
+
+function renderSalesOrOrders() {
+  if (isAdmin()) {
+    const recentSales = [...db.sales].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8);
+    $('#sales-history').innerHTML = recentSales.map(sale => `
+      <tr>
+        <td>${esc(new Date(sale.date).toLocaleString('id-ID'))}</td>
+        <td>${esc((sale.items || []).map(item => `${item.name} × ${item.qty}`).join('; ') || 'Penjualan')}</td>
+        <td>${money(looseInteger(sale.total, 0, 0))}</td>
+        <td>${money(looseInteger(sale.change, 0, 0))}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="4" class="empty">Belum ada penjualan. Selesaikan transaksi pertama dari keranjang.</td></tr>';
+    const lastSale = recentSales[0];
+    $('#checkout-status').textContent = lastSale
+      ? `Transaksi terakhir: ${new Date(lastSale.date).toLocaleTimeString('id-ID')} · Kembalian ${money(looseInteger(lastSale.change, 0, 0))}`
+      : 'Belum ada transaksi pada sesi ini.';
+  } else {
+    const myOrders = db.purchaseOrders
+      .filter(order => order.consumerId === currentUser.id)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+    $('#sales-history').innerHTML = myOrders.slice(0, 8).map(order => `
+      <tr>
+        <td>${esc(new Date(order.date).toLocaleString('id-ID'))}</td>
+        <td>${esc(order.orderNo)} · ${esc(order.items.map(item => `${item.name} × ${item.qty}`).join('; '))}</td>
+        <td>${money(order.total)}</td>
+        <td>${esc(order.status)}</td>
+      </tr>
+    `).join('') || '<tr><td colspan="4" class="empty">Belum ada pembelian. Tambahkan produk lalu checkout.</td></tr>';
+    const lastOrder = myOrders[0];
+    $('#checkout-status').textContent = lastOrder
+      ? `Pesanan terakhir: ${lastOrder.orderNo} · ${lastOrder.status}`
+      : 'Belum ada pembelian pada akun ini.';
+  }
+}
+
+function renderConsumerHistoryPage() {
+  const myOrders = db.purchaseOrders
+    .filter(order => order.consumerId === currentUser?.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  $('#consumer-history').innerHTML = myOrders.map(order => `
+    <tr>
+      <td>${esc(order.orderNo)}</td>
+      <td>${esc(new Date(order.date).toLocaleString('id-ID'))}</td>
+      <td>${esc(order.items.map(item => `${item.name} × ${item.qty}`).join('; '))}</td>
+      <td>${esc(order.status)}</td>
+      <td>${money(order.total)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" class="empty">Belum ada riwayat pembelian.</td></tr>';
+}
+
+function sellerSales() {
+  if (!isPenjual()) return [];
+  const ownedShopIds = new Set(db.shops.filter(shop => shop.ownerId === currentUser.id).map(shop => shop.id));
+  return db.sales.filter(sale => sale.items.some(item => {
+    const shopId = item.shopId || db.products.find(product => product.id === item.id)?.shopId;
+    return ownedShopIds.has(shopId);
+  })).map(sale => ({
+    ...sale,
+    items: sale.items.map(item => ({
+      ...item,
+      shopId: item.shopId || db.products.find(product => product.id === item.id)?.shopId || null
+    }))
+  }));
+}
+
+function renderSellerSales() {
+  if (!isPenjual()) return;
+  const ownedShopIds = new Set(db.shops.filter(shop => shop.ownerId === currentUser.id).map(shop => shop.id));
+  const daysValue = $('#seller-sales-period').value;
+  const days = daysValue === 'all' ? null : Number(daysValue);
+  const now = Date.now();
+  const sales = sellerSales().filter(sale => {
+    if (!Number.isFinite(days)) return true;
+    const age = now - new Date(sale.date).getTime();
+    return age >= 0 && age <= days * 24 * 60 * 60 * 1000;
+  });
+  const revenue = sales.reduce((sum, sale) => sum + sale.items
+    .filter(item => ownedShopIds.has(item.shopId))
+    .reduce((itemSum, item) => itemSum + item.price * item.qty, 0), 0);
+  const unitsSold = sales.reduce((sum, sale) => sum + sale.items
+    .filter(item => ownedShopIds.has(item.shopId))
+    .reduce((itemSum, item) => itemSum + item.qty, 0), 0);
+  $('#seller-sales-stats').innerHTML =
+    stat('Total omzet', money(revenue), daysValue === 'all' ? 'Semua periode' : `${daysValue} hari terakhir`) +
+    stat('Transaksi', sales.length + ' transaksi', 'Toko milik Anda') +
+    stat('Barang terjual', unitsSold + ' unit', 'Jumlah seluruh produk');
+
+  $('#seller-sales-history').innerHTML = sales
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .map(sale => {
+      const items = sale.items.filter(item => ownedShopIds.has(item.shopId));
+      const shopIds = [...new Set(items.map(item => item.shopId))];
+      const shopNames = shopIds.map(id => db.shops.find(shop => shop.id === id)?.name).filter(Boolean).join(', ');
+      const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
+      return `<tr>
+        <td>${esc(new Date(sale.date).toLocaleString('id-ID'))}</td>
+        <td>${esc(shopNames || 'Toko')}</td>
+        <td>${esc(items.map(item => `${item.name} × ${item.qty}`).join('; '))}</td>
+        <td>${money(total)}</td>
+        <td>${esc(sale.paymentMethod)}</td>
+      </tr>`;
+    }).join('') || '<tr><td colspan="5" class="empty">Belum ada penjualan pada periode ini.</td></tr>';
+
+  const products = new Map();
+  sales.forEach(sale => sale.items.filter(item => ownedShopIds.has(item.shopId)).forEach(item => {
+    const row = products.get(item.id) || { name: item.name, qty: 0, revenue: 0 };
+    row.qty += item.qty;
+    row.revenue += item.price * item.qty;
+    products.set(item.id, row);
+  }));
+  $('#seller-top-products').innerHTML = [...products.values()]
+    .sort((a, b) => b.qty - a.qty || b.revenue - a.revenue)
+    .slice(0, 8)
+    .map(row => `<div class="trend-row"><strong>${esc(row.name)}</strong><span>Terjual: ${row.qty} unit</span><span>Omzet: ${money(row.revenue)}</span></div>`)
+    .join('') || '<p class="empty">Belum ada data produk terjual.</p>';
+}
+
+function renderFinance() {
+  const income = db.sales.reduce((n, s) => n + s.total, 0);
+  const expenses = db.expenses.reduce((n, e) => n + e.amount, 0);
+  $('#finance-stats').innerHTML =
+    stat('Total penjualan', money(income), 'Seluruh periode') +
+    stat('Pengeluaran', money(expenses), 'Seluruh periode') +
+    stat('Arus kas bersih', money(income - expenses), 'Bukan laba usaha');
+
+  const history = [
+    ...db.sales.map(s => ({ ...s, label: 'Penjualan · ' + s.items.map(p => `${p.name} × ${p.qty}`).join('; '), income: s.total, out: 0 })),
+    ...db.expenses.map(e => ({ ...e, label: e.note, income: 0, out: e.amount }))
+  ].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const historyQuery = $('#history-search').value.toLocaleLowerCase('id-ID').trim();
+  const days = $('#history-period').value === 'all' ? null : Number($('#history-period').value);
+  const now = Date.now();
+  const filteredHistory = history.filter(item => {
+    const label = String(item.label || '').toLocaleLowerCase('id-ID');
+    if (historyQuery && !label.includes(historyQuery)) return false;
+    if (!Number.isFinite(days)) return true;
+    const age = now - new Date(item.date).getTime();
+    return age >= 0 && age <= days * 24 * 60 * 60 * 1000;
+  });
+
+  $('#history').innerHTML = filteredHistory.map(h => `
+    <tr><td>${esc(new Date(h.date).toLocaleString('id-ID'))}</td>
+    <td>${esc(h.label)}</td><td>${h.income ? money(h.income) : '—'}</td>
+    <td>${h.out ? money(h.out) : '—'}</td></tr>`).join('') ||
+    '<tr><td colspan="4" class="empty">Belum ada transaksi.</td></tr>';
+
+  const monthly = new Map();
+  [...db.sales, ...db.expenses].forEach(item => {
+    const date = new Date(item.date);
+    if (Number.isNaN(date.getTime())) return;
+    const key = date.toISOString().slice(0, 7);
+    if (!monthly.has(key)) monthly.set(key, { income: 0, out: 0 });
+    const row = monthly.get(key);
+    if (Object.prototype.hasOwnProperty.call(item, 'total')) row.income += Number(item.total) || 0;
+    if (Object.prototype.hasOwnProperty.call(item, 'amount')) row.out += Number(item.amount) || 0;
+  });
+  const trend = [...monthly.entries()].sort((a, b) => a[0].localeCompare(b[0])).slice(-6);
+  $('#trend-list').innerHTML = trend.map(([month, row]) => `
+    <div class="trend-row">
+      <strong>${esc(new Date(month + '-01T00:00:00.000Z').toLocaleDateString('id-ID', { month: 'short', year: 'numeric' }))}</strong>
+      <span>Masuk: ${money(row.income)}</span>
+      <span>Keluar: ${money(row.out)}</span>
+      <span>Bersih: ${money(row.income - row.out)}</span>
+    </div>
+  `).join('') || '<p class="empty">Belum cukup data untuk menampilkan tren bulanan.</p>';
+}
+
+function renderMerchants() {
+  renderShops();
+  const orders = isPembeli() ? db.purchaseOrders.filter(order => order.consumerId === currentUser.id) : db.purchaseOrders;
+  $('#orders').innerHTML = [...orders].reverse().map(o => `
+    <div class="cart-row"><div class="between"><strong>${esc(o.shopName || 'Toko')}</strong><span class="pill">${esc(o.status)}</span></div>
+    <p>${esc(o.items.map(item => `${item.name} × ${item.qty}`).join('; '))} · ${money(o.total)}</p>
+    <small>${esc(o.shopAddress || '')} · ${db.shops.some(s => s.id === o.shopId) ? `<button type="button" class="secondary mini" data-route-shop="${esc(o.shopId)}">🧭 Rute di peta</button> · ` : ''}<a target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${o.lat},${o.lng}`)}">Google Maps</a></small></div>
+  `).join('') || '<p class="empty">Belum ada pesanan.</p>';
+}
+
+function renderProductDetail() {
+  if (!selectedProductId) {
+    $('#product-detail-title').textContent = 'Produk';
+    $('#product-detail-content').innerHTML = '<div class="panel empty">Pilih produk untuk melihat detail.</div>';
+    return;
+  }
+  const product = db.products.find(item => item.id === selectedProductId);
+  if (!product) {
+    $('#product-detail-title').textContent = 'Produk tidak ditemukan';
+    $('#product-detail-content').innerHTML = '<div class="panel empty">Produk sudah tidak tersedia.</div>';
+    return;
+  }
+  const shop = db.shops.find(item => item.id === product.shopId);
+  const reviews = db.purchaseOrders
+    .filter(order => order.items.some(item => item.id === product.id))
+    .slice(-6)
+    .reverse()
+    .map(order => `<div class="cart-row"><strong>${esc(order.buyerName || 'Pembeli')}</strong><br><small>${esc(new Date(order.date).toLocaleDateString('id-ID'))} · Pesanan ${esc(order.orderNo)}</small><p>Produk diterima sesuai pesanan.</p></div>`)
+    .join('');
+  $('#product-detail-title').textContent = product.name;
+  $('#product-detail-content').innerHTML = `
+    <div class="panel">
+      <h2>${esc(product.icon)} ${esc(product.name)}</h2>
+      <p class="muted" style="margin-top:10px">${esc(product.description || 'Deskripsi produk belum tersedia.')}</p>
+      <p style="margin-top:12px"><strong>${money(product.price)}</strong> / ${esc(product.unit)} · Stok ${product.stock} ${esc(product.unit)}</p>
+      <p class="muted" style="margin-top:6px">Toko: ${esc(shop?.name || 'Tanpa toko')}</p>
+    </div>
+    <div class="panel">
+      <h2>Ulasan pembeli</h2>
+      <div class="detail-list">${reviews || '<p class="empty">Belum ada ulasan untuk produk ini.</p>'}</div>
+    </div>
+  `;
+}
+
+function renderShopDetail() {
+  if (!selectedShopId) {
+    $('#shop-detail-title').textContent = 'Toko';
+    $('#shop-detail-content').innerHTML = '<div class="panel empty">Pilih toko untuk melihat detail.</div>';
+    return;
+  }
+  const shop = db.shops.find(item => item.id === selectedShopId);
+  if (!shop) {
+    $('#shop-detail-title').textContent = 'Toko tidak ditemukan';
+    $('#shop-detail-content').innerHTML = '<div class="panel empty">Toko sudah tidak tersedia.</div>';
+    return;
+  }
+  const products = db.products.filter(product => product.shopId === shop.id);
+  const reviews = db.purchaseOrders
+    .filter(order => order.shopId === shop.id)
+    .slice(-6)
+    .reverse()
+    .map(order => `<div class="cart-row"><strong>${esc(order.buyerName || 'Pembeli')}</strong><br><small>${esc(new Date(order.date).toLocaleDateString('id-ID'))} · Pesanan ${esc(order.orderNo)}</small><p>Pengiriman/pengambilan berjalan baik.</p></div>`)
+    .join('');
+  $('#shop-detail-title').textContent = shop.name;
+  $('#shop-detail-content').innerHTML = `
+    <div class="panel">
+      <h2>🏪 ${esc(shop.name)}</h2>
+      <p class="muted" style="margin-top:10px">${esc(shop.description)}</p>
+      <p style="margin-top:12px">${esc(shop.address)}</p>
+      <button type="button" data-route-shop="${esc(shop.id)}" style="margin-top:14px">🧭 Direksi ke toko</button>
+    </div>
+    <div class="panel">
+      <h2>Produk di toko ini</h2>
+      <div class="detail-list">
+        ${products.map(product => `<div class="cart-row"><strong>${esc(product.icon)} ${esc(product.name)}</strong><br><small>${money(product.price)} / ${esc(product.unit)} · Stok ${product.stock}</small></div>`).join('') || '<p class="empty">Belum ada produk di toko ini.</p>'}
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Ulasan pembeli</h2>
+      <div class="detail-list">${reviews || '<p class="empty">Belum ada ulasan untuk toko ini.</p>'}</div>
+    </div>
+  `;
+}
+
+function renderDashboardHead() {
+  const title = $('#page-kasir h1');
+  const desc = $('#page-kasir .muted');
+  const badge = $('#page-kasir .page-head .pill');
+  if (isAdmin()) {
+    title.textContent = 'Siap jualan hari ini?';
+    desc.textContent = 'Catat transaksi. Stok langsung terkelola.';
+    badge.textContent = 'Mode Admin';
+  } else if (isPenjual()) {
+    title.textContent = 'Kelola toko Anda';
+    desc.textContent = 'Atur produk dan stok toko milik Anda sendiri.';
+    badge.textContent = 'Mode Penjual';
+  } else {
+    title.textContent = 'Belanja kebutuhan hari ini';
+    desc.textContent = 'Pilih toko, pilih produk, lalu checkout dengan petunjuk arah.';
+    badge.textContent = 'Mode Pembeli';
+  }
+}
+
+function renderStats() {
+  if (isAdmin()) {
+    const today = new Date().toDateString();
+    const salesToday = db.sales.filter(s => new Date(s.date).toDateString() === today);
+    $('#sales-stats').innerHTML =
+      stat('Penjualan hari ini', money(salesToday.reduce((n, s) => n + s.total, 0)), 'Transaksi tersimpan') +
+      stat('Transaksi hari ini', salesToday.length + ' transaksi', 'Kasir & konsumer') +
+      stat('Stok menipis', db.products.filter(p => p.stock <= 5).length + ' produk', 'Stok ≤ 5 satuan');
+  } else if (isPembeli()) {
+    const mine = db.purchaseOrders.filter(order => order.consumerId === currentUser.id);
+    $('#sales-stats').innerHTML =
+      stat('Total pembelian saya', money(mine.reduce((n, order) => n + order.total, 0)), 'Semua periode') +
+      stat('Jumlah pesanan', mine.length + ' pesanan', 'Akun ini saja') +
+      stat('Produk tersedia', db.products.filter(p => p.stock > 0).length + ' produk', 'Bisa dibeli sekarang');
+  } else {
+    const mine = db.shops.filter(shop => shop.ownerId === currentUser.id);
+    const products = db.products.filter(product => mine.some(shop => shop.id === product.shopId));
+    $('#sales-stats').innerHTML =
+      stat('Toko saya', mine.length + ' toko', 'Toko terdaftar') +
+      stat('Produk saya', products.length + ' produk', 'Katalog milik Anda') +
+      stat('Stok menipis', products.filter(p => p.stock <= 5).length + ' produk', 'Stok ≤ 5 satuan');
+  }
+}
+
+function openProductDetail(id) {
+  selectedProductId = id;
+  detailBackPage = activePage;
+  setPage('produk');
+  renderProductDetail();
+}
+
+function openShopDetail(id) {
+  selectedShopId = id;
+  detailBackPage = activePage;
+  setPage('toko-detail');
+  renderShopDetail();
+}
+
+function render() {
+  renderTopbar();
+  if (!currentUser) return;
+  ensureCartOwner();
+  renderNavigation();
+  renderDashboardHead();
+  renderStats();
+  renderShopFilter();
+  renderProducts();
+  renderCart();
+  renderStockTable();
+  renderSalesOrOrders();
+  renderSellerSales();
+  renderConsumerHistoryPage();
+  renderMerchants();
+  renderProductDetail();
+  renderShopDetail();
+  renderFinance();
+  if (!canAccessPage(currentUser.role, activePage)) activePage = isAdmin() ? 'kasir' : 'kasir';
+  setPage(activePage);
+  if (activePage === 'pasar') initMap();
+}
+
+function applyTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  localStorage.setItem('pasarkita-theme', theme);
+  $('#theme-toggle').textContent = theme === 'dark' ? '☀ Mode terang' : '☾ Mode gelap';
+}
+
+function openEditor(title, fields, action) {
+  $('#editor-title').textContent = title;
+  $('#editor-fields').innerHTML = fields;
+  editAction = action;
+  $('#editor').showModal();
+}
+
+function editProduct(id) {
+  if (!requireRole(['admin', 'penjual'], 'Hanya Admin atau Penjual yang dapat mengubah produk.')) return;
+  const p = db.products.find(x => x.id === id);
+  if (!p) return;
+  const shop = db.shops.find(item => item.id === p.shopId);
+  if (isPenjual() && shop?.ownerId !== currentUser?.id) return toast('Anda hanya dapat mengubah produk toko sendiri.');
+  openEditor('Edit produk · ' + p.name, `
+    <label>Nama produk<input name="name" maxlength="70" required value="${esc(p.name)}"></label>
+    <label>Deskripsi produk<textarea name="description" maxlength="240" required style="width:100%;min-height:80px">${esc(p.description || '')}</textarea></label>
+    ${numberField('Harga jual per satuan (Rp)', 'price', 1, p.price)}
+    ${numberField('Stok', 'stock', 0, p.stock)}
+    <label>Satuan<select name="unit">${units.map(unit => `<option ${unit === p.unit ? 'selected' : ''}>${unit}</option>`).join('')}</select></label>
+    <label>Ikon produk<input name="icon" maxlength="6" value="${esc(p.icon)}"></label>`,
+  form => {
+    const nextProduct = normalizeProduct({
+      ...p,
+      name: form.get('name'),
+      description: form.get('description'),
+      price: form.get('price'),
+      stock: form.get('stock'),
+      unit: form.get('unit'),
+      icon: form.get('icon')
+    });
+    return commit(next => {
+      const target = next.products.find(x => x.id === id);
+      Object.assign(target, nextProduct);
+    });
+  });
+}
+
+function removeProduct(id) {
+  if (!requireRole('admin', 'Hanya Admin yang dapat menghapus produk.')) return;
+  const p = db.products.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Hapus produk "${p.name}" dari katalog?`)) return;
+  if (!commit(next => {
+    next.products = next.products.filter(x => x.id !== id);
+  })) return;
+  delete cart[id];
+  render();
+  toast('Produk dihapus dari katalog.');
+}
+
+function editShop(id) {
+  const shop = db.shops.find(item => item.id === id);
+  if (!shop || (!isAdmin() && shop.ownerId !== currentUser?.id)) return;
+  openEditor('Edit toko · ' + shop.name, `
+    <label>Nama toko<input name="name" maxlength="80" required value="${esc(shop.name)}"></label>
+    <label>Deskripsi toko<textarea name="description" maxlength="240" required style="width:100%;min-height:80px">${esc(shop.description)}</textarea></label>
+    <label>Alamat/lokasi toko<input name="address" maxlength="160" required value="${esc(shop.address)}"></label>
+    ${numberField('Latitude', 'lat', -90, shop.lat)}
+    ${numberField('Longitude', 'lng', -180, shop.lng)}`,
+    form => commit(next => {
+      const target = next.shops.find(item => item.id === id);
+      target.name = text(form.get('name'));
+      target.description = text(form.get('description'));
+      target.address = text(form.get('address'));
+      target.lat = Number(form.get('lat'));
+      target.lng = Number(form.get('lng'));
+      if (!Number.isFinite(target.lat) || target.lat < -90 || target.lat > 90 || !Number.isFinite(target.lng) || target.lng < -180 || target.lng > 180) {
+        throw new Error('Koordinat lokasi tidak valid.');
+      }
+    }));
+}
+
+function removeShop(id) {
+  if (!requireRole('admin', 'Hanya Admin yang dapat menghapus toko.')) return;
+  const shop = db.shops.find(item => item.id === id);
+  if (!shop || !confirm(`Hapus toko "${shop.name}" beserta produknya?`)) return;
+  if (!commit(next => {
+    next.shops = next.shops.filter(item => item.id !== id);
+    next.products = next.products.filter(product => product.shopId !== id);
+  })) return;
+  cartLines().filter(line => line.shopId === id).forEach(line => delete cart[line.id]);
+  render();
+  toast('Toko dan produknya dihapus.');
+}
+
+async function restoreBackup(file) {
+  if (!requireRole('admin', 'Hanya Admin yang dapat memulihkan backup.')) return;
+  if (!file) return;
+  try {
+    const raw = await file.text();
+    const parsed = JSON.parse(raw);
+    const restored = await normalizeDb(parsed);
+    if (!commit(next => Object.assign(next, restored))) return;
+    cart = {};
+    $('#cash').value = '';
+    render();
+    toast('Backup berhasil dipulihkan.');
+  } catch (error) {
+    toast('Gagal memulihkan backup: ' + error.message);
+  }
+}
+
+function numberField(label, name, min = 1, value = '') {
+  const step = min < 0 ? 'any' : '1';
+  const max = min < 0 ? (min === -90 ? 90 : 180) : 1000000000;
+  return `<label>${esc(label)}<input name="${name}" type="number" min="${min}" max="${max}" step="${step}" value="${value}" inputmode="numeric" required></label>`;
+}
+
+function integer(value, min = 1, max = 1000000000) {
+  const n = Number(value);
+  if (!Number.isSafeInteger(n) || n < min || n > max) throw new Error(`Isi bilangan bulat ${min}–${max}.`);
+  return n;
+}
+
+function text(value) {
+  const s = String(value || '').trim();
+  if (!s) throw new Error('Isian tidak boleh kosong.');
+  return s;
+}
+
+function addQuantity(id) {
+  if (!requireRole(['admin', 'pembeli'], 'Silakan login sebagai Admin atau Pembeli untuk berbelanja.')) return;
+  const p = db.products.find(x => x.id === id);
+  if (!p) return;
+  const existing = cartLines()[0];
+  if (existing && existing.shopId !== p.shopId) return toast('Checkout hanya dapat berisi produk dari satu toko.');
+  if ((cart[id] || 0) >= p.stock) return toast('Stok tidak mencukupi.');
+  cart[id] = (cart[id] || 0) + 1;
+  renderCart();
+  renderProducts();
+}
+
+function checkoutAdmin() {
+  if (!requireRole('admin', 'Checkout kasir hanya untuk Admin.')) return;
+  const lines = cartLines();
+  if (!lines.length) return;
+  const total = cartTotal();
+  const cash = Number($('#cash').value);
+  if (!Number.isSafeInteger(cash) || cash < total || !Number.isSafeInteger(total)) {
+    return toast('Masukkan uang tunai yang cukup dalam rupiah bulat.');
+  }
+  const sale = {
+    id: uid(),
+    date: new Date().toISOString(),
+    items: lines,
+    total,
+    cash,
+    change: cash - total,
+    source: 'admin',
+    consumerId: null,
+    paymentMethod: 'Tunai'
+  };
+  if (!commit(next => {
+    for (const line of lines) {
+      const p = next.products.find(product => product.id === line.id);
+      if (!p || p.stock < line.qty) throw new Error('Stok berubah. Periksa keranjang.');
+      p.stock -= line.qty;
+    }
+    next.sales.push(sale);
+  })) return;
+  cart = {};
+  $('#cash').value = '';
+  render();
+  toast('Transaksi tersimpan. Kembalian: ' + money(sale.change));
+}
+
+function checkoutPembeli() {
+  if (!requireRole('pembeli', 'Checkout hanya untuk akun Pembeli.')) return;
+  const lines = cartLines();
+  if (!lines.length) return;
+  const total = cartTotal();
+  const shop = db.shops.find(item => item.id === lines[0].shopId);
+  const directions = shop ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${shop.lat},${shop.lng}`)}` : '#';
+  openEditor('Checkout Pesanan', `
+    <p class="muted">Pastikan jumlah produk sudah benar sebelum checkout.</p>
+    <div class="notice"><strong>${esc(shop?.name || 'Toko')}</strong><br>${esc(shop?.address || 'Lokasi toko belum tersedia')}<br>
+      <a target="_blank" rel="noopener" href="${directions}">Buka map & direksi ke toko →</a></div>
+    <label>Nama pembeli<input name="buyerName" maxlength="70" required value="${esc(currentUser.name)}"></label>
+    <label>Metode pembayaran
+      <select name="paymentMethod" required>
+        <option>Transfer (simulasi)</option>
+        <option>Tunai saat ambil</option>
+        <option>COD (simulasi)</option>
+      </select>
+    </label>
+    <p class="muted">Total: <strong>${money(total)}</strong></p>`,
+    form => {
+      const buyerName = text(form.get('buyerName'));
+      const paymentMethod = text(form.get('paymentMethod'));
+      const latestLines = cartLines();
+      if (!latestLines.length) throw new Error('Keranjang kosong. Tambahkan produk terlebih dahulu.');
+      const latestTotal = latestLines.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const orderNo = `ORD-${Date.now().toString().slice(-8)}-${Math.random().toString(36).slice(2, 5).toUpperCase()}`;
+      const order = {
+        id: uid(),
+        orderNo,
+        date: new Date().toISOString(),
+        consumerId: currentUser.id,
+        shopId: latestLines[0].shopId,
+        shopName: db.shops.find(shop => shop.id === latestLines[0].shopId)?.name || 'Toko',
+        shopAddress: db.shops.find(shop => shop.id === latestLines[0].shopId)?.address || '',
+        lat: db.shops.find(shop => shop.id === latestLines[0].shopId)?.lat,
+        lng: db.shops.find(shop => shop.id === latestLines[0].shopId)?.lng,
+        buyerName,
+        paymentMethod,
+        status: 'Berhasil (simulasi)',
+        items: latestLines,
+        total: latestTotal
+      };
+      const sale = {
+        id: uid(),
+        date: order.date,
+        items: latestLines,
+        total: latestTotal,
+        cash: latestTotal,
+        change: 0,
+        source: 'konsumer',
+        consumerId: currentUser.id,
+        paymentMethod
+      };
+      if (!commit(next => {
+        for (const line of latestLines) {
+          const p = next.products.find(product => product.id === line.id);
+          if (!p || p.stock < line.qty) throw new Error('Stok berubah saat checkout. Silakan cek ulang keranjang.');
+          p.stock -= line.qty;
+        }
+        next.purchaseOrders.push(order);
+        next.sales.push(sale);
+      })) return false;
+      cart = {};
+      $('#cash').value = '';
+      render();
+      toast(`Checkout berhasil. ID pesanan: ${orderNo}`);
+      return true;
+    }
+  );
+}
+
+async function handleSignup(event) {
+  event.preventDefault();
+  const form = new FormData(event.target);
+  try {
+    const name = text(form.get('name'));
+    const loginNorm = normalizeLogin(form.get('login'));
+    const login = String(form.get('login')).trim();
+    const password = String(form.get('password') || '');
+    const confirmPassword = String(form.get('confirmPassword') || '');
+    const role = normalizeRole(form.get('role'));
+    if (!['penjual', 'pembeli'].includes(role)) throw new Error('Role signup hanya Penjual atau Pembeli.');
+    if (password.length < 8) throw new Error('Password minimal 8 karakter.');
+    if (password !== confirmPassword) throw new Error('Konfirmasi password tidak cocok.');
+    if (db.users.some(user => user.loginNorm === loginNorm)) throw new Error('Akun dengan email/username tersebut sudah ada.');
+    const passwordHash = await hashPassword(password);
+    const user = {
+      id: uid(),
+      name,
+      login,
+      loginNorm,
+      passwordHash,
+      role,
+      createdAt: new Date().toISOString()
+    };
+    if (!commit(next => {
+      next.users.push(user);
+      next.currentSession = { userId: user.id, loginAt: new Date().toISOString() };
+    })) return;
+    $('#signup-status').textContent = `Akun ${role} berhasil dibuat dan login otomatis.`;
+    event.target.reset();
+    activePage = role === 'admin' ? 'kasir' : 'kasir';
+    render();
+    toast('Signup berhasil. Selamat datang di PasarKita!');
+  } catch (error) {
+    $('#signup-status').textContent = error.message;
+    toast(error.message);
+  }
+}
+
+async function handleLogin(event) {
+  event.preventDefault();
+  const form = new FormData(event.target);
+  try {
+    const loginNorm = normalizeLogin(form.get('login'));
+    const password = String(form.get('password') || '');
+    const user = db.users.find(item => item.loginNorm === loginNorm);
+    if (!user) throw new Error('Akun tidak ditemukan. Periksa email/username Anda.');
+    const passOK = await verifyPassword(password, user.passwordHash);
+    if (!passOK) throw new Error('Password salah.');
+    if (!commit(next => {
+      next.currentSession = { userId: user.id, loginAt: new Date().toISOString() };
+    })) return;
+    $('#login-status').textContent = 'Login berhasil.';
+    event.target.reset();
+    activePage = user.role === 'admin' ? 'kasir' : 'kasir';
+    render();
+    toast(`Selamat datang, ${user.name}.`);
+  } catch (error) {
+    $('#login-status').textContent = error.message;
+    toast(error.message);
+  }
+}
+
+function handleLogout() {
+  if (!currentUser) return;
+  if (!commit(next => {
+    next.currentSession = null;
+  })) return;
+  cart = {};
+  $('#cash').value = '';
+  activePage = 'kasir';
+  render();
+  toast('Anda sudah logout.');
+}
+
+function bindEvents() {
+  document.querySelectorAll('[data-page]').forEach(button => {
+    button.addEventListener('click', () => {
+      setPage(button.dataset.page, 'Menu ini tidak tersedia untuk role Anda.');
+    });
+  });
+
+  $('#login-form').addEventListener('submit', handleLogin);
+  $('#signup-form').addEventListener('submit', handleSignup);
+  $('#logout').addEventListener('click', handleLogout);
+
+  $('#search').addEventListener('input', renderProducts);
+  $('#shop-filter').addEventListener('change', () => { cart = {}; renderCart(); renderProducts(); });
+  $('#market-shop-search').addEventListener('input', renderShops);
+  $('#market-product-search').addEventListener('input', renderShops);
+  $('#history-search').addEventListener('input', render);
+  $('#history-period').addEventListener('change', render);
+  $('#seller-sales-period').addEventListener('change', renderSellerSales);
+  $('#back-from-product').onclick = () => setPage(detailBackPage);
+  $('#back-from-shop').onclick = () => setPage(detailBackPage);
+  $('#clear-cart').onclick = () => {
+    if (!requireRole(['admin', 'pembeli'])) return;
+    cart = {};
+    renderCart();
+    renderProducts();
+  };
+  $('#checkout').onclick = () => {
+    if (isAdmin()) checkoutAdmin();
+    else if (isPembeli()) checkoutPembeli();
+  };
+  $('#cancel-editor').onclick = () => $('#editor').close();
+  $('#editor-form').onsubmit = async event => {
+    event.preventDefault();
+    try {
+      if (await editAction(new FormData(event.target))) {
+        $('#editor').close();
+        render();
+        toast('Berhasil disimpan di perangkat.');
+      }
+    } catch (error) {
+      toast(error.message);
+    }
+  };
+
+  document.addEventListener('click', event => {
+    const b = event.target.closest('button');
+    if (!b) return;
+    if (b.dataset.add) addQuantity(b.dataset.add);
+    if (b.dataset.minus) {
+      if (!requireRole(['admin', 'pembeli'])) return;
+      const id = b.dataset.minus;
+      cart[id] = (cart[id] || 0) - 1;
+      if (cart[id] <= 0) delete cart[id];
+      renderCart();
+      renderProducts();
+    }
+    if (b.dataset.restock) {
+      const id = b.dataset.restock;
+      const p = db.products.find(x => x.id === id);
+      const shop = db.shops.find(item => item.id === p?.shopId);
+      if (!requireRole(['admin', 'penjual'], 'Hanya Admin atau Penjual yang dapat menambah stok.') ||
+        (isPenjual() && shop?.ownerId !== currentUser.id)) return toast('Anda hanya dapat mengubah stok toko sendiri.');
+      openEditor('Tambah stok · ' + p.name, numberField('Jumlah tambahan (' + p.unit + ')', 'qty'),
+        form => {
+          const qty = integer(form.get('qty'));
+          return commit(next => {
+            const product = next.products.find(x => x.id === id);
+            product.stock = integer(product.stock + qty, 0);
+          });
+        });
+    }
+    if (b.dataset.edit) editProduct(b.dataset.edit);
+    if (b.dataset.viewProduct) openProductDetail(b.dataset.viewProduct);
+    if (b.dataset.delete) removeProduct(b.dataset.delete);
+    if (b.dataset.editShop) editShop(b.dataset.editShop);
+    if (b.dataset.viewShop) openShopDetail(b.dataset.viewShop);
+    if (b.dataset.routeShop) startRoute(b.dataset.routeShop);
+    if (b.dataset.deleteShop) removeShop(b.dataset.deleteShop);
+    if (b.dataset.selectShop) {
+      $('#shop-filter').value = b.dataset.selectShop;
+      cart = {};
+      renderCart();
+      renderProducts();
+      setPage('kasir');
+    }
+    if (b.dataset.locate) {
+      const m = db.shops.find(x => x.id === b.dataset.locate);
+      if (!map) return toast('Peta belum tersedia. Daftar pedagang tetap dapat digunakan.');
+      map.setView([m.lat, m.lng], 16);
+      markers[m.id]?.openPopup();
+      $('#map').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  });
+
+  $('#add-shop').onclick = () => {
+    if (!requireRole(['admin', 'penjual'], 'Hanya Admin atau Penjual yang dapat membuat toko.')) return;
+    openEditor('Buat toko', `
+      <label>Nama toko<input name="name" maxlength="80" required placeholder="Contoh: Toko Segar"></label>
+      <label>Deskripsi toko<textarea name="description" maxlength="240" required style="width:100%;min-height:80px"></textarea></label>
+      <label>Alamat/lokasi toko<input name="address" maxlength="160" required placeholder="Alamat toko"></label>
+      ${numberField('Latitude', 'lat', -90, -7.798)}
+      ${numberField('Longitude', 'lng', -180, 110.369)}`,
+      form => {
+        const shop = {
+          id: uid(), ownerId: isAdmin() ? (db.users.find(user => user.role === 'penjual')?.id || currentUser.id) : currentUser.id,
+          name: text(form.get('name')), description: text(form.get('description')), address: text(form.get('address')),
+          lat: Number(form.get('lat')), lng: Number(form.get('lng')), createdAt: new Date().toISOString()
+        };
+        if (!Number.isFinite(shop.lat) || shop.lat < -90 || shop.lat > 90 || !Number.isFinite(shop.lng) || shop.lng < -180 || shop.lng > 180) {
+          throw new Error('Koordinat lokasi tidak valid.');
+        }
+        return commit(next => next.shops.push(shop));
+      });
+  };
+
+  $('#add-product').onclick = () => {
+    if (!requireRole(['admin', 'penjual'], 'Hanya Admin atau Penjual yang dapat menambah produk.')) return;
+    const shops = isAdmin() ? db.shops : db.shops.filter(shop => shop.ownerId === currentUser.id);
+    if (!shops.length) return toast('Buat toko terlebih dahulu.');
+    openEditor('Tambah produk', `
+    <label>Nama produk<input name="name" maxlength="70" required placeholder="Contoh: Gula pasir"></label>
+    <label>Deskripsi produk<textarea name="description" maxlength="240" required style="width:100%;min-height:80px" placeholder="Deskripsi singkat produk"></textarea></label>
+    ${numberField('Harga jual per satuan (Rp)', 'price')}
+    ${numberField('Stok awal', 'stock', 0, 0)}
+    <label>Satuan<select name="unit">${units.map(unit => `<option>${unit}</option>`).join('')}</select></label>
+    <label>Toko<select name="shopId">${shops.map(shop => `<option value="${esc(shop.id)}">${esc(shop.name)}</option>`).join('')}</select></label>`,
+    form => {
+      const product = normalizeProduct({
+        id: uid(),
+        name: form.get('name'),
+        description: form.get('description'),
+        price: form.get('price'),
+        stock: form.get('stock'),
+        unit: form.get('unit'),
+        icon: '📦',
+        shopId: form.get('shopId')
+      });
+      return commit(next => next.products.push(product));
+    });
+  };
+
+  $('#add-expense').onclick = () => {
+    if (!requireRole('admin', 'Hanya Admin yang dapat mencatat pengeluaran.')) return;
+    openEditor('Catat pengeluaran', `
+    <label>Keterangan<input name="note" maxlength="120" required placeholder="Contoh: Belanja stok atau biaya angkut"></label>
+    ${numberField('Nominal (Rp)', 'amount')}`,
+    form => {
+      const entry = {
+        id: uid(),
+        date: new Date().toISOString(),
+        note: text(form.get('note')),
+        amount: integer(form.get('amount'))
+      };
+      return commit(next => next.expenses.push(entry));
+    });
+  };
+
+  $('#backup').onclick = () => {
+    if (!requireRole('admin', 'Hanya Admin yang dapat membuat backup.')) return;
+    const exportData = {
+      ...db,
+      users: db.users.map(user => ({
+        id: user.id,
+        name: user.name,
+        login: user.login,
+        role: user.role,
+        passwordHash: user.passwordHash,
+        createdAt: user.createdAt
+      }))
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pasarkita-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('Backup diunduh. Gunakan tombol "Pulihkan backup" untuk memuat kembali data.');
+  };
+
+  $('#restore-trigger').onclick = () => {
+    if (!requireRole('admin', 'Hanya Admin yang dapat memulihkan backup.')) return;
+    $('#restore-file').click();
+  };
+
+  $('#restore-file').onchange = event => {
+    const [file] = event.target.files || [];
+    restoreBackup(file);
+    event.target.value = '';
+  };
+
+  $('#reset-data').onclick = () => {
+    if (!requireRole('admin', 'Hanya Admin yang dapat reset data.')) return;
+    if (!confirm('Reset data transaksi lokal? Produk demo akan dikembalikan dan transaksi dihapus.')) return;
+    if (!commit(next => {
+      const fresh = initialData();
+      next.products = fresh.products;
+      next.sales = [];
+      next.expenses = [];
+      next.orders = [];
+      next.purchaseOrders = [];
+    })) return;
+    cart = {};
+    $('#cash').value = '';
+    render();
+    toast('Data transaksi lokal berhasil direset. Akun tetap tersimpan.');
+  };
+
+  $('#theme-toggle').onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  bindRouteEvents();
+
+  window.addEventListener('online', () => {
+    updateConnection();
+    if (!$('#page-pasar').hidden) initMap();
+  });
+  window.addEventListener('offline', updateConnection);
+  window.addEventListener('storage', async event => {
+    if (event.key !== KEY) return;
+    try {
+      db = await normalizeDb(JSON.parse(event.newValue));
+      syncCurrentUser();
+      render();
+    } catch {
+      location.reload();
+    }
+  });
+}
+
+function updateConnection() {
+  $('#connection').textContent = navigator.onLine ? '● Online · data lokal' : '● Offline · data lokal';
+  $('#connection').classList.toggle('off', !navigator.onLine);
+}
+
+/* ===== Peta & Direksi ===== */
+const OSM_TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+const CAR_BASES = [
+  'https://routing.openstreetmap.de/routed-car/route/v1/driving',
+  'https://router.project-osrm.org/route/v1/driving'
+];
+const ROUTE_MODES = {
+  car:   { label: 'Mobil',      icon: '🚗',  bases: CAR_BASES, gmaps: 'driving',     factor: 1 },
+  motor: { label: 'Motor',      icon: '🏍️', bases: CAR_BASES, gmaps: 'two-wheeler', factor: 0.85 },
+  bike:  { label: 'Sepeda',     icon: '🚲',  bases: ['https://routing.openstreetmap.de/routed-bike/route/v1/driving'], gmaps: 'bicycling', factor: 1 },
+  foot:  { label: 'Jalan kaki', icon: '🚶',  bases: ['https://routing.openstreetmap.de/routed-foot/route/v1/driving'], gmaps: 'walking',   factor: 1 }
+};
+const routeState = {
+  shopId: null, dest: null, origin: null, originKind: null, originLabel: '',
+  mode: 'car', picking: false, seq: 0, controller: null, data: null
+};
+let userPos = null;
+let routeLayer = null, originMarker = null, userMarker = null, userCircle = null, stepMarker = null;
+
+const fmtDist = m => m < 1000
+  ? `${Math.max(10, Math.round(m / 10) * 10)} m`
+  : `${(m / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} km`;
+const fmtDur = s => {
+  const min = Math.max(1, Math.round(s / 60));
+  if (min < 60) return `${min} mnt`;
+  const h = Math.floor(min / 60), r = min % 60;
+  return r ? `${h} j ${r} mnt` : `${h} j`;
+};
+const smoothBehavior = () => matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
+function haversine(a, b) {
+  const rad = x => x * Math.PI / 180, R = 6371000;
+  const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+const distanceTo = shop => userPos ? haversine(userPos, shop) : Infinity;
+const distanceBadge = shop => userPos
+  ? `<p class="shop-dist">📍 ± ${fmtDist(distanceTo(shop))} dari Anda (garis lurus)</p>` : '';
+
+const gmapsUrl = (dest, origin, mode) => {
+  const p = new URLSearchParams({ api: '1', destination: `${dest.lat},${dest.lng}`, travelmode: ROUTE_MODES[mode || 'car'].gmaps });
+  if (origin) p.set('origin', `${origin.lat},${origin.lng}`);
+  return 'https://www.google.com/maps/dir/?' + p.toString();
+};
+
+/* --- Teks petunjuk arah berbahasa Indonesia --- */
+const DIR_ID = {
+  left: 'kiri', right: 'kanan', straight: 'lurus', uturn: 'putar balik',
+  'slight left': 'sedikit ke kiri', 'slight right': 'sedikit ke kanan',
+  'sharp left': 'tajam ke kiri', 'sharp right': 'tajam ke kanan'
+};
+const DIR_ICON = {
+  left: '↰', right: '↱', straight: '↑', uturn: '↩',
+  'slight left': '↖', 'slight right': '↗', 'sharp left': '↙', 'sharp right': '↘'
+};
+function stepIcon(step) {
+  const { type, modifier } = step.maneuver;
+  if (type === 'depart') return '●';
+  if (type === 'arrive') return '🏁';
+  if (type === 'roundabout' || type === 'rotary' || type === 'roundabout turn') return '⟳';
+  return DIR_ICON[modifier] || '↑';
+}
+function stepText(step) {
+  const { type, modifier, exit } = step.maneuver;
+  const name = step.name ? String(step.name) : '';
+  const to = name ? ` ke ${name}` : '';
+  const on = name ? ` di ${name}` : '';
+  const dir = DIR_ID[modifier] || 'lurus';
+  switch (type) {
+    case 'depart': return `Mulai perjalanan${on}`;
+    case 'arrive': return modifier === 'left' || modifier === 'right'
+      ? `Anda tiba di tujuan (di sebelah ${dir})` : 'Anda tiba di tujuan';
+    case 'turn': return modifier === 'uturn' ? `Putar balik${on}` : `Belok ${dir}${to}`;
+    case 'end of road': return modifier === 'uturn' ? `Putar balik${on}` : `Di ujung jalan, belok ${dir}${to}`;
+    case 'fork': return `Di percabangan, ambil jalur ${dir}${to}`;
+    case 'merge': return `Gabung ke jalur ${dir}${to}`;
+    case 'on ramp': return `Masuk jalur akses${to}`;
+    case 'off ramp': return `Keluar lewat jalur ${dir}${to}`;
+    case 'roundabout':
+    case 'rotary': return exit ? `Masuk bundaran, ambil jalan keluar ke-${exit}${to}` : `Masuk bundaran${to}`;
+    case 'roundabout turn': return `Di bundaran, belok ${dir}${to}`;
+    case 'exit roundabout':
+    case 'exit rotary': return `Keluar dari bundaran${to}`;
+    case 'new name':
+    case 'continue': return modifier && modifier !== 'straight' ? `Lanjut ke arah ${dir}${to}` : `Lanjut lurus${to}`;
+    default: return `Lanjutkan${on}`;
+  }
+}
+
+/* --- Ikon penanda --- */
+function pinIcon(content, cls) {
+  return L.divIcon({
+    className: `pk-pin ${cls || ''}`,
+    html: `<div class="pin" aria-hidden="true">${content}</div>`,
+    iconSize: cls === 'dest' ? [42, 50] : [36, 44],
+    iconAnchor: cls === 'dest' ? [21, 50] : [18, 44],
+    popupAnchor: [0, -42]
+  });
+}
+const meIcon = () => L.divIcon({ className: 'pk-me', html: '<div class="dot"></div>', iconSize: [18, 18], iconAnchor: [9, 9] });
+const stepIconMarker = () => L.divIcon({ className: 'pk-step', html: '<div class="ring"></div>', iconSize: [22, 22], iconAnchor: [11, 11] });
+
+function shopPopup(shop) {
+  const box = document.createElement('div');
+  box.className = 'pk-popup';
+  const title = document.createElement('strong');
+  title.textContent = shop.name;
+  const addr = document.createElement('p');
+  addr.textContent = shop.address;
+  box.append(title, addr);
+  if (userPos) {
+    const d = document.createElement('p');
+    d.textContent = `± ${fmtDist(distanceTo(shop))} dari Anda (garis lurus)`;
+    box.append(d);
+  }
+  const row = document.createElement('div');
+  row.className = 'pk-row';
+  const go = document.createElement('button');
+  go.type = 'button';
+  go.textContent = '🧭 Direksi';
+  go.addEventListener('click', () => { map?.closePopup(); startRoute(shop.id); });
+  const pick = document.createElement('button');
+  pick.type = 'button';
+  pick.className = 'alt';
+  pick.textContent = 'Pilih toko';
+  pick.addEventListener('click', () => {
+    $('#shop-filter').value = shop.id;
+    cart = {};
+    renderCart();
+    renderProducts();
+    setPage('kasir');
+  });
+  row.append(go, pick);
+  box.append(row);
+  return box;
+}
+
+function syncMapMarkers() {
+  if (!map) return;
+  Object.keys(markers).forEach(id => { map.removeLayer(markers[id]); delete markers[id]; });
+  db.shops.forEach(shop => {
+    const isDest = routeState.shopId === shop.id;
+    markers[shop.id] = L.marker([shop.lat, shop.lng], {
+      icon: pinIcon('🏪', isDest ? 'dest' : ''),
+      title: shop.name,
+      zIndexOffset: isDest ? 1000 : 0
+    }).addTo(map).bindPopup(() => shopPopup(shop));
+  });
+  if (routeState.shopId) {
+    const shop = db.shops.find(item => item.id === routeState.shopId);
+    if (!shop) { clearRoute(); return; }
+    if (shop.lat !== routeState.dest.lat || shop.lng !== routeState.dest.lng) {
+      routeState.dest = { lat: shop.lat, lng: shop.lng };
+      calcRoute();
+    }
+    updateRouteHeader(shop);
+  }
+}
+
+function fitAllShops() {
+  if (!map) return;
+  const pts = db.shops.map(shop => [shop.lat, shop.lng]);
+  if (!pts.length) map.setView([-7.798, 110.369], 15);
+  else if (pts.length === 1) map.setView(pts[0], 16);
+  else map.fitBounds(pts, { padding: [50, 50], maxZoom: 16 });
+}
+
+/* --- Lokasi pengguna --- */
+function getUserLocation() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) return reject(new Error('Browser tidak mendukung lokasi.'));
+    navigator.geolocation.getCurrentPosition(
+      p => resolve({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }),
+      err => reject(new Error(err.code === 1 ? 'Izin lokasi ditolak.' : err.code === 3 ? 'Pencarian lokasi terlalu lama.' : 'Lokasi tidak tersedia.')),
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 }
+    );
+  });
+}
+
+function setUserPos(p) {
+  userPos = { lat: p.lat, lng: p.lng };
+  if (map) {
+    if (userMarker) map.removeLayer(userMarker);
+    if (userCircle) map.removeLayer(userCircle);
+    userCircle = p.acc && p.acc < 2000
+      ? L.circle([p.lat, p.lng], { radius: p.acc, color: '#1a73e8', weight: 1, fillOpacity: .1, interactive: false }).addTo(map) : null;
+    userMarker = L.marker([p.lat, p.lng], { icon: meIcon(), interactive: false, keyboard: false, zIndexOffset: 500 }).addTo(map);
+  }
+  renderShops();
+}
+
+async function locateMe(center) {
+  showChip('Mencari lokasi Anda…');
+  try {
+    const p = await getUserLocation();
+    setUserPos(p);
+    if (center && map) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15));
+    return p;
+  } catch (error) {
+    toast(`${error.message} Pilih titik awal di peta atau cari alamat.`);
+    return null;
+  } finally {
+    refreshChip();
+  }
+}
+
+/* --- Chip status di atas peta --- */
+function showChip(text, cancellable) {
+  $('#map-chip-text').textContent = text;
+  $('#map-chip-cancel').hidden = !cancellable;
+  $('#map-chip').hidden = false;
+}
+function hideChip() { $('#map-chip').hidden = true; }
+function refreshChip() {
+  if (routeState.picking) return;
+  if (routeState.data) {
+    const cfg = ROUTE_MODES[routeState.mode];
+    showChip(`${cfg.icon} ${fmtDur(routeState.data.duration * cfg.factor)} · ${fmtDist(routeState.data.distance)}`);
+  } else hideChip();
+}
+
+/* --- Titik awal --- */
+function setOrigin(point, kind, label) {
+  routeState.origin = { lat: point.lat, lng: point.lng };
+  routeState.originKind = kind;
+  routeState.originLabel = label || (kind === 'gps' ? 'Lokasi Anda saat ini' : `Titik di peta (${point.lat.toFixed(5)}, ${point.lng.toFixed(5)})`);
+  if (originMarker && map) { map.removeLayer(originMarker); originMarker = null; }
+  if (kind === 'manual' && map) {
+    originMarker = L.marker([point.lat, point.lng], { icon: pinIcon('A', 'start'), draggable: true, title: 'Titik awal (geser untuk mengubah)', zIndexOffset: 800 }).addTo(map);
+    originMarker.on('dragend', () => {
+      const ll = originMarker.getLatLng();
+      setOrigin({ lat: ll.lat, lng: ll.lng }, 'manual');
+      calcRoute();
+    });
+  }
+  $('#route-origin-label').textContent = (kind === 'gps' ? '📍 ' : '🚩 ') + routeState.originLabel;
+}
+
+function beginPicking() {
+  routeState.picking = true;
+  $('#map').classList.add('picking');
+  showChip('Klik peta untuk menentukan titik awal', true);
+  $('#map').scrollIntoView({ behavior: smoothBehavior(), block: 'center' });
+}
+function endPicking() {
+  routeState.picking = false;
+  $('#map')?.classList.remove('picking');
+  refreshChip();
+}
+function onMapClick(event) {
+  if (!routeState.picking) return;
+  endPicking();
+  setOrigin({ lat: event.latlng.lat, lng: event.latlng.lng }, 'manual');
+  calcRoute();
+}
+
+/* --- Menghitung & menggambar rute --- */
+async function fetchRoute(origin, dest, mode, signal) {
+  const cfg = ROUTE_MODES[mode];
+  let lastError = null;
+  for (const base of cfg.bases) {
+    if (signal.aborted) throw new DOMException('Dibatalkan', 'AbortError');
+    const attempt = new AbortController();
+    const onAbort = () => attempt.abort();
+    signal.addEventListener('abort', onAbort);
+    const timer = setTimeout(() => attempt.abort(), 10000);
+    try {
+      const url = `${base}/${origin.lng},${origin.lat};${dest.lng},${dest.lat}?overview=full&geometries=geojson&steps=true`;
+      const res = await fetch(url, { signal: attempt.signal });
+      if (!res.ok) throw new Error('Layanan rute sedang sibuk.');
+      const data = await res.json();
+      if (data.code === 'NoRoute') throw Object.assign(new Error('Tidak ada jalur untuk moda ini. Coba moda lain atau geser titik awal.'), { final: true });
+      if (data.code === 'NoSegment') throw Object.assign(new Error('Titik awal terlalu jauh dari jalan. Geser titik awal lebih dekat ke jalan.'), { final: true });
+      if (data.code !== 'Ok' || !data.routes?.length) throw new Error('Rute tidak ditemukan.');
+      return data.routes[0];
+    } catch (error) {
+      if (signal.aborted || error.final) throw error;
+      lastError = error.name === 'AbortError' ? new Error('Layanan rute terlalu lama merespons.')
+        : error instanceof TypeError ? new Error('Tidak dapat terhubung ke layanan rute.') : error;
+    } finally {
+      clearTimeout(timer);
+      signal.removeEventListener('abort', onAbort);
+    }
+  }
+  throw lastError || new Error('Gagal menghitung rute.');
+}
+
+function clearRouteLine() {
+  if (routeLayer && map) map.removeLayer(routeLayer);
+  routeLayer = null;
+  if (stepMarker && map) map.removeLayer(stepMarker);
+  stepMarker = null;
+  routeState.data = null;
+}
+
+function renderRouteMessage(text) {
+  $('#route-steps').textContent = '';
+  const box = $('#route-summary');
+  box.hidden = false;
+  box.textContent = '';
+  const p = document.createElement('div');
+  p.className = text.startsWith('Menghitung') ? '' : 'route-error';
+  p.textContent = text;
+  box.append(p);
+  if (text.startsWith('Menghitung')) showChip(text);
+  else hideChip();
+}
+
+async function calcRoute() {
+  const { origin, dest, mode } = routeState;
+  if (!origin || !dest || !map) return;
+  $('#route-gmaps').href = gmapsUrl(dest, origin, mode);
+  if (!navigator.onLine) { clearRouteLine(); renderRouteMessage('Perhitungan rute memerlukan koneksi internet.'); return; }
+  routeState.controller?.abort();
+  const controller = new AbortController();
+  routeState.controller = controller;
+  const seq = ++routeState.seq;
+  renderRouteMessage('Menghitung rute…');
+  try {
+    const route = await fetchRoute(origin, dest, mode, controller.signal);
+    if (seq !== routeState.seq) return;
+    routeState.data = route;
+    drawRoute(route);
+    renderRouteSummary(route);
+    renderSteps(route);
+  } catch (error) {
+    if (error.name === 'AbortError' || seq !== routeState.seq) return;
+    clearRouteLine();
+    renderRouteMessage(error.message || 'Gagal menghitung rute.');
+  }
+}
+
+function drawRoute(route) {
+  if (routeLayer) map.removeLayer(routeLayer);
+  const latlngs = route.geometry.coordinates.map(([lng, lat]) => [lat, lng]);
+  const foot = routeState.mode === 'foot';
+  const layers = [];
+  if (!foot) layers.push(L.polyline(latlngs, { color: '#fff', weight: 10, opacity: .92, lineCap: 'round', lineJoin: 'round', interactive: false }));
+  layers.push(L.polyline(latlngs, { color: '#1a73e8', weight: foot ? 5 : 6, opacity: 1, lineCap: 'round', lineJoin: 'round', dashArray: foot ? '1 9' : null, interactive: false }));
+  routeLayer = L.layerGroup(layers).addTo(map);
+  map.fitBounds(L.latLngBounds(latlngs), { padding: [55, 55] });
+}
+
+function renderRouteSummary(route) {
+  const cfg = ROUTE_MODES[routeState.mode];
+  const dur = route.duration * cfg.factor;
+  const eta = new Date(Date.now() + dur * 1000).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  const box = $('#route-summary');
+  box.hidden = false;
+  box.textContent = '';
+  const big = document.createElement('div');
+  big.className = 'route-big';
+  const d = document.createElement('strong');
+  d.textContent = fmtDur(dur);
+  const k = document.createElement('span');
+  k.textContent = fmtDist(route.distance);
+  big.append(d, k);
+  const note = document.createElement('p');
+  note.className = 'muted';
+  note.textContent = `Perkiraan tiba pukul ${eta}` + (routeState.mode === 'motor' ? ' · estimasi motor dari rute jalan raya' : '');
+  box.append(big, note);
+  showChip(`${cfg.icon} ${fmtDur(dur)} · ${fmtDist(route.distance)}`);
+}
+
+function renderSteps(route) {
+  const list = $('#route-steps');
+  list.textContent = '';
+  const steps = route.legs.flatMap(leg => leg.steps).filter(step => step.distance > 0 || step.maneuver.type === 'arrive');
+  steps.forEach(step => {
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'route-step';
+    const ic = document.createElement('span');
+    ic.className = 'ic';
+    ic.setAttribute('aria-hidden', 'true');
+    ic.textContent = stepIcon(step);
+    const tx = document.createElement('span');
+    tx.textContent = stepText(step);
+    const ds = document.createElement('small');
+    ds.textContent = step.maneuver.type === 'arrive' ? '' : fmtDist(step.distance);
+    btn.append(ic, tx, ds);
+    btn.addEventListener('click', () => focusStep(step));
+    li.append(btn);
+    list.append(li);
+  });
+}
+
+function focusStep(step) {
+  if (!map) return;
+  const [lng, lat] = step.maneuver.location;
+  if (stepMarker) map.removeLayer(stepMarker);
+  stepMarker = L.marker([lat, lng], { icon: stepIconMarker(), interactive: false, keyboard: false }).addTo(map);
+  map.setView([lat, lng], 17);
+  $('#map').scrollIntoView({ behavior: smoothBehavior(), block: 'center' });
+}
+
+/* --- Panel direksi --- */
+function updateRouteHeader(shop) {
+  $('#route-title').textContent = `Rute ke ${shop.name}`;
+  $('#route-sub').textContent = shop.address;
+}
+
+function showRoutePanel(shop) {
+  updateRouteHeader(shop);
+  $('#route-panel').hidden = false;
+  document.querySelectorAll('[data-route-mode]').forEach(btn =>
+    btn.setAttribute('aria-pressed', String(btn.dataset.routeMode === routeState.mode)));
+}
+
+async function startRoute(shopId) {
+  const shop = db.shops.find(item => item.id === shopId);
+  if (!shop) return toast('Toko tidak ditemukan.');
+  if (activePage !== 'pasar') setPage('pasar');
+  const m = await initMap();
+  if (!m) {
+    toast('Peta belum bisa dimuat. Membuka direksi di Google Maps.');
+    window.open(gmapsUrl(shop, userPos, routeState.mode), '_blank', 'noopener');
+    return;
+  }
+  routeState.shopId = shop.id;
+  routeState.dest = { lat: shop.lat, lng: shop.lng };
+  syncMapMarkers();
+  showRoutePanel(shop);
+  m.closePopup();
+  endPicking();
+  $('#route-panel').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
+  if (!routeState.origin) {
+    const point = userPos || await locateMe(false);
+    if (!point) {
+      $('#route-origin-label').textContent = 'Belum dipilih — izinkan lokasi, klik peta, atau cari alamat';
+      renderRouteMessage('Tentukan titik awal untuk melihat rute.');
+      beginPicking();
+      return;
+    }
+    setOrigin(point, 'gps');
+  } else {
+    setOrigin(routeState.origin, routeState.originKind, routeState.originLabel);
+  }
+  calcRoute();
+}
+
+function clearRoute() {
+  routeState.controller?.abort();
+  routeState.seq++;
+  routeState.shopId = null;
+  routeState.dest = null;
+  routeState.origin = null;
+  routeState.originKind = null;
+  endPicking();
+  clearRouteLine();
+  if (originMarker && map) map.removeLayer(originMarker);
+  originMarker = null;
+  $('#route-panel').hidden = true;
+  $('#route-summary').hidden = true;
+  $('#route-steps').textContent = '';
+  $('#route-search-results').textContent = '';
+  if (map) syncMapMarkers();
+}
+
+async function searchOrigin() {
+  const q = $('#route-search').value.trim();
+  const box = $('#route-search-results');
+  if (q.length < 3) return toast('Ketik minimal 3 huruf untuk mencari alamat.');
+  if (!navigator.onLine) return toast('Pencarian alamat memerlukan koneksi internet.');
+  box.textContent = 'Mencari…';
+  try {
+    const params = new URLSearchParams({ format: 'jsonv2', q, countrycodes: 'id', limit: '5', 'accept-language': 'id' });
+    if (routeState.dest) {
+      const { lat, lng } = routeState.dest;
+      params.set('viewbox', `${lng - .5},${lat + .5},${lng + .5},${lat - .5}`);
+    }
+    const res = await fetch('https://nominatim.openstreetmap.org/search?' + params.toString());
+    if (!res.ok) throw new Error('gagal');
+    const rows = await res.json();
+    box.textContent = '';
+    if (!rows.length) { box.textContent = 'Alamat tidak ditemukan. Coba kata kunci lain.'; return; }
+    rows.forEach(row => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'route-result';
+      btn.textContent = row.display_name;
+      btn.addEventListener('click', () => {
+        box.textContent = '';
+        $('#route-search').value = '';
+        endPicking();
+        const point = { lat: Number(row.lat), lng: Number(row.lon) };
+        setOrigin(point, 'manual', String(row.display_name).split(',').slice(0, 2).join(','));
+        map.panTo([point.lat, point.lng]);
+        calcRoute();
+      });
+      box.append(btn);
+    });
+  } catch {
+    box.textContent = 'Pencarian alamat gagal. Coba lagi nanti atau klik titik di peta.';
+  }
+}
+
+function bindRouteEvents() {
+  $('#route-close').addEventListener('click', clearRoute);
+  $('#map-chip-cancel').addEventListener('click', endPicking);
+  $('#route-pick').addEventListener('click', beginPicking);
+  $('#route-use-gps').addEventListener('click', async () => {
+    const p = await locateMe(false);
+    if (!p) return;
+    endPicking();
+    setOrigin(p, 'gps');
+    calcRoute();
+  });
+  $('#route-search-btn').addEventListener('click', searchOrigin);
+  $('#route-search').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); searchOrigin(); } });
+  document.querySelectorAll('[data-route-mode]').forEach(btn => btn.addEventListener('click', () => {
+    routeState.mode = btn.dataset.routeMode;
+    document.querySelectorAll('[data-route-mode]').forEach(x => x.setAttribute('aria-pressed', String(x === btn)));
+    calcRoute();
+  }));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && routeState.picking) endPicking(); });
+  window.addEventListener('online', () => { if (routeState.shopId && !routeState.data && routeState.origin) calcRoute(); });
+}
+
+/* --- Pemuatan peta --- */
+function loadScript(url) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = resolve;
+    s.onerror = () => { s.remove(); reject(new Error('Tidak dapat memuat pustaka peta.')); };
+    document.head.appendChild(s);
+  });
+}
+
+function initMap() {
+  if (map) {
+    setTimeout(() => map.invalidateSize(), 100);
+    syncMapMarkers();
+    return Promise.resolve(map);
+  }
+  if (mapPromise) return mapPromise;
+  if (!navigator.onLine) {
+    $('#map-status').textContent = 'Peta memerlukan internet. Pilih pedagang dari daftar untuk membuat draft offline.';
+    return Promise.resolve(null);
+  }
+  mapPromise = buildMap().finally(() => { mapPromise = null; });
+  return mapPromise;
+}
+
+async function buildMap() {
+  $('#map-status').textContent = 'Memuat peta…';
+  try {
+    if (!window.L) {
+      if (!$('#leaflet-css')) {
+        const css = document.createElement('link');
+        css.id = 'leaflet-css'; css.rel = 'stylesheet';
+        css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(css);
+      }
+      await loadScript('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js');
+    }
+    map = L.map('map').setView([-7.798, 110.369], 15);
+    const osm = L.tileLayer(OSM_TILES, {
+      maxZoom: 19, className: 'tiles-osm',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19, attribution: 'Tiles &copy; Esri'
+    });
+    osm.on('tileerror', () => {
+      $('#map-status').textContent = 'Sebagian peta gagal dimuat. Daftar pedagang tetap dapat digunakan.';
+    });
+    L.control.layers({ Peta: osm, Satelit: satellite }, null, { position: 'topright' }).addTo(map);
+    L.control.scale({ imperial: false }).addTo(map);
+    const Tools = L.Control.extend({
+      options: { position: 'topleft' },
+      onAdd() {
+        const bar = L.DomUtil.create('div', 'leaflet-bar pk-ctl');
+        const add = (text, title, fn) => {
+          const a = L.DomUtil.create('a', '', bar);
+          a.href = '#'; a.textContent = text; a.title = title;
+          a.setAttribute('role', 'button'); a.setAttribute('aria-label', title);
+          L.DomEvent.on(a, 'click', e => { L.DomEvent.stop(e); fn(); });
+        };
+        add('◎', 'Lokasi saya', () => locateMe(true));
+        add('⤢', 'Tampilkan semua toko', fitAllShops);
+        return bar;
+      }
+    });
+    new Tools().addTo(map);
+    map.on('click', onMapClick);
+    if (userPos) setUserPos(userPos);
+    syncMapMarkers();
+    fitAllShops();
+    $('#map-status').textContent = 'Ketuk penanda toko lalu pilih “Direksi”, atau gunakan tombol 🧭 pada daftar toko untuk melihat rute.';
+    setTimeout(() => map.invalidateSize(), 150);
+    return map;
+  } catch {
+    if (map) { map.remove(); map = null; }
+    $('#map-status').textContent = 'Peta gagal dimuat. Gunakan daftar pedagang, lalu buka kembali menu ini untuk mencoba lagi.';
+    return null;
+  }
+}
+
+async function boot() {
+  let recovered = false;
+  try {
+    const raw = localStorage.getItem(KEY);
+    db = raw ? await normalizeDb(JSON.parse(raw)) : await normalizeDb(initialData());
+    localStorage.setItem(KEY, JSON.stringify(db));
+  } catch {
+    recovered = true;
+    try {
+      db = await normalizeDb(initialData());
+      localStorage.setItem(KEY, JSON.stringify(db));
+    } catch {
+      $('main').innerHTML = '<div class="notice">Penyimpanan lokal tidak tersedia atau data aplikasi rusak. Coba browser normal dengan penyimpanan situs aktif.</div>';
+      return;
+    }
+  }
+  syncCurrentUser();
+  applyTheme(localStorage.getItem('pasarkita-theme') === 'dark' ? 'dark' : 'light');
+  bindEvents();
+  updateConnection();
+  render();
+  if (!currentUser) showAuthScreen();
+  if (recovered) toast('Data lama tidak valid, aplikasi memulai data demo baru.');
+}
+
+boot();
+
+if ('serviceWorker' in navigator && ['http:', 'https:'].includes(location.protocol)) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => navigator.serviceWorker.ready)
+    .then(() => $('#offline-status').textContent = 'Halaman siap offline. Data tetap lokal, tanpa sinkronisasi.')
+    .catch(() => $('#offline-status').textContent = 'Cache offline belum aktif. Gunakan localhost atau HTTPS.');
+} else {
+  $('#offline-status').textContent = 'Untuk memuat ulang saat offline, jalankan melalui localhost atau HTTPS.';
+}
+
+</script>
+</body>
+</html>
